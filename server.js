@@ -25,7 +25,6 @@ http
 
     if (q.pathname.includes("documentation")) {
       filePath = __dirname + "/documentation.html";
-      console.log("documentation");
     } else {
       filePath = "index.html";
     }
@@ -35,7 +34,7 @@ http
         throw err;
       }
 
-      response.writeHead(200, { "Content-Type": "text/plain" });
+      response.writeHead(200, { "Content-Type": "text/html" });
       response.write(data);
       response.end();
     });
