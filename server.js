@@ -9,17 +9,19 @@ http
     const q = new URL(addr, "http://localhost:8080");
     let filePath = "";
 
-    fs.appendFile(
-      "log.txt",
-      "URL: " + addr + "\n Timestamp: " + new Date() + "\n\n",
-      (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Entry logged.");
+    if (!addr.includes("favicon")) {
+      fs.appendFile(
+        "log.txt",
+        "URL: " + addr + "\n Timestamp: " + new Date() + "\n\n",
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Entry logged.");
+          }
         }
-      }
-    );
+      );
+    }
 
     if (q.pathname.includes("documentation")) {
       filePath = __dirname + "/documentation.html";
