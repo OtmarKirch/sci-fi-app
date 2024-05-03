@@ -40,6 +40,25 @@ app.get('/movies/:title', (req, res) => {
   });
 });
 
+//return genre of a movie
+
+app.get('/movies/genres/:name', (req, res) => {
+  fs.readFile('./data/genre.json', 'utf-8', (err, data) => {
+      const genres = JSON.parse(data);
+      console.log(genres)
+
+      const reqData = genres.find((genre)=>{
+        return genre.name.toLowerCase() === req.params.name
+      })
+
+      if (reqData) {
+        res.json(reqData);
+      } else {
+        res.status(404).send('404: Genre could not be found.');
+      }
+  })
+})
+
 app.use(express.static('public'));
 
 //error handler

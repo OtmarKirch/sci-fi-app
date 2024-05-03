@@ -1,0 +1,10 @@
+[
+    {
+        "name": "thriller",
+        "description": "Very thrilling movie"
+    },
+    {
+        "name": "action",
+        "description": "Lots of violence"
+    } 
+]
