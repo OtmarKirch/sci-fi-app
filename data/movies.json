@@ -1,42 +1,82 @@
 [
 {
       "title": "Gladiator",
-      "director": "Ridley Scott"
+      "director": "Ridley Scott",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Dune",
-      "author": "Frank Herbert"
+      "author": "Frank Herbert",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Solaris",
-      "author": "Stanislav Lem"
+      "author": "Stanislav Lem",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "The Fifth Element",
-      "author": "Stanley Kubrik"
+      "author": "Stanley Kubrik",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "The Expanse",
-      "author": ""
+      "author": "",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Star Wars III",
-      "author": "Steven Spielberg"
+      "author": "Steven Spielberg",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Riddick",
-      "author": ""
+      "author": "",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Star Trek VIII",
-      "author": "Rick Berman"
+      "author": "Rick Berman",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Stargate",
-      "author": "Rick Berman"
+      "author": "Rick Berman",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 },
 {
       "title": "Star Trek VIII",
-      "author": "Rick Berman"
+      "author": "Rick Berman",
+      "genre": {
+            "name": "historical",
+            "description": "Set in historical times"
+      }
 }
 ]

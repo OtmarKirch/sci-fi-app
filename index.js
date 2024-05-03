@@ -41,23 +41,23 @@ app.get('/movies/:title', (req, res) => {
 });
 
 //return genre of a movie
+app.get('/movies/genre/:title', (req, res) => {
+  fs.readFile('./data/movies.json', 'utf-8', (err, data) => {
+    const movies = JSON.parse(data);
 
-app.get('/movies/genres/:name', (req, res) => {
-  fs.readFile('./data/genre.json', 'utf-8', (err, data) => {
-      const genres = JSON.parse(data);
-      console.log(genres)
+    const reqMovie = movies.find((movie) => {
+      return movie.title.toLowerCase() === req.params.title;
+    });
 
-      const reqData = genres.find((genre)=>{
-        return genre.name.toLowerCase() === req.params.name
-      })
+    if (reqMovie) {
+      const genre = reqMovie.genre
+      res.json(genre);
+    } else {
+      res.status(404).send('404: Movie could not be found.');
+    }
+  });
+});
 
-      if (reqData) {
-        res.json(reqData);
-      } else {
-        res.status(404).send('404: Genre could not be found.');
-      }
-  })
-})
 
 app.use(express.static('public'));
 
