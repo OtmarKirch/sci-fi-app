@@ -2,7 +2,25 @@ const express = require('express');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
+const bodyParser = require('body-parser');
+
 const app = express();
+
+//list of registered users
+let usersRepository =(function () {
+  let userList = [];
+
+  return {
+    addUser: () => {console.log("called addUser function")},
+    deleteUser: () => {console.log("called deleteUser function")},
+    changeUserName: () => {console.log("called changeUserName function")}
+  }
+
+})()
+
+
+
+app.use(bodyParser.json());
 
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
@@ -75,6 +93,17 @@ app.get('/movies/director/:title', (req, res) => {
     }
   });
 });
+
+//register new user
+app.post('/user/register/', (req, res) => {
+  const newUser = req.body;
+  if (newUser){
+    console.log("New user registered")
+    res.send("New user " + newUser.name + " has been registered.")
+  } else {
+    res.status(500).send('500: Format of new user cannot be accepted.')
+  }
+})
 
 
 app.use(express.static('public'));
