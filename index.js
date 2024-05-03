@@ -12,7 +12,9 @@ let usersRepository = (function () {
   let userList = [];
 
   return {
-    getAll: () => {return userList},
+    getAll: () => {
+      return userList;
+    },
     addUser: (name) => {
       userList.push({
         userName: name,
@@ -28,8 +30,16 @@ let usersRepository = (function () {
       });
       console.log('called deleteUser function');
     },
-    changeUserName: () => {
+    changeUserName: (oldName, newName) => {
+        let userNameChanged = false;
+      userList.forEach((item, i) => {
+        if (item.userName === oldName) {
+          item.userName = newName;
+          userNameChanged = true;
+        }
+      });
       console.log('called changeUserName function');
+      return userNameChanged;
     },
     addFavoriteMovie: () => {},
     removeFavoriteMovie: () => {},
@@ -114,7 +124,6 @@ app.get('/movies/director/:title', (req, res) => {
 app.post('/user/register/', (req, res) => {
   const newUser = req.body.name;
 
- 
   if (newUser) {
     usersRepository.addUser(newUser);
     console.log(usersRepository.getAll());
@@ -124,11 +133,27 @@ app.post('/user/register/', (req, res) => {
   }
 });
 
+//update username
+app.put('/user/:userName', (req, res) => {
+  const userNameToUpdate = req.body.name;
+  const userNameChanged = usersRepository.changeUserName(
+    req.params.userName,
+    userNameToUpdate
+  );
+  if (userNameChanged) {
+    console.log(usersRepository.getAll());
+    res.send(
+      'User ' + req.params.userName + ' has been changed to ' + userNameToUpdate
+    );
+  } else {
+    res.status(500).send('500: Format of new user name cannot be accepted.');
+  }
+});
+
 //deregister user
 app.delete('/user/delete', (req, res) => {
   const userToDelete = req.body.name;
 
-  
   if (userToDelete) {
     usersRepository.deleteUser(userToDelete);
     console.log(usersRepository.getAll());
