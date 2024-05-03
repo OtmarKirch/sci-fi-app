@@ -3,22 +3,38 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const uuid = require('uuid');
 
 const app = express();
 
 //list of registered users
-let usersRepository =(function () {
+let usersRepository = (function () {
   let userList = [];
 
   return {
-    addUser: () => {console.log("called addUser function")},
-    deleteUser: () => {console.log("called deleteUser function")},
-    changeUserName: () => {console.log("called changeUserName function")}
-  }
-
-})()
-
-
+    getAll: () => {return userList},
+    addUser: (name) => {
+      userList.push({
+        userName: name,
+        id: uuid.v4(),
+        favoriteMovies: {},
+      });
+    },
+    deleteUser: (name) => {
+      userList.forEach((item, i) => {
+        if (item.userName === name) {
+          userList.splice(i, 1);
+        }
+      });
+      console.log('called deleteUser function');
+    },
+    changeUserName: () => {
+      console.log('called changeUserName function');
+    },
+    addFavoriteMovie: () => {},
+    removeFavoriteMovie: () => {},
+  };
+})();
 
 app.use(bodyParser.json());
 
@@ -68,7 +84,7 @@ app.get('/movies/genre/:title', (req, res) => {
     });
 
     if (reqMovie) {
-      const genre = reqMovie.genre
+      const genre = reqMovie.genre;
       res.json(genre);
     } else {
       res.status(404).send('404: Movie could not be found.');
@@ -86,7 +102,7 @@ app.get('/movies/director/:title', (req, res) => {
     });
 
     if (reqMovie) {
-      const genre = reqMovie.director
+      const genre = reqMovie.director;
       res.json(genre);
     } else {
       res.status(404).send('404: Movie could not be found.');
@@ -96,15 +112,31 @@ app.get('/movies/director/:title', (req, res) => {
 
 //register new user
 app.post('/user/register/', (req, res) => {
-  const newUser = req.body;
-  if (newUser){
-    console.log("New user registered")
-    res.send("New user " + newUser.name + " has been registered.")
-  } else {
-    res.status(500).send('500: Format of new user cannot be accepted.')
-  }
-})
+  const newUser = req.body.name;
 
+ 
+  if (newUser) {
+    usersRepository.addUser(newUser);
+    console.log(usersRepository.getAll());
+    res.send('New user ' + newUser + ' has been registered.');
+  } else {
+    res.status(500).send('500: Format of new user cannot be accepted.');
+  }
+});
+
+//deregister user
+app.delete('/user/delete', (req, res) => {
+  const userToDelete = req.body.name;
+
+  
+  if (userToDelete) {
+    usersRepository.deleteUser(userToDelete);
+    console.log(usersRepository.getAll());
+    res.send('User ' + userToDelete + ' has been deleted.');
+  } else {
+    res.status(500).send('500: Format of new user cannot be accepted.');
+  }
+});
 
 app.use(express.static('public'));
 
