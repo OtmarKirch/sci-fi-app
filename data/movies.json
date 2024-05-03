@@ -1,7 +1,12 @@
 [
 {
       "title": "Gladiator",
-      "director": "Ridley Scott",
+      "director": {
+            "name": "Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "5Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -9,7 +14,12 @@
 },
 {
       "title": "Dune",
-      "author": "Frank Herbert",
+      "director": {
+            "name": "6Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -17,7 +27,12 @@
 },
 {
       "title": "Solaris",
-      "author": "Stanislav Lem",
+      "director": {
+            "name": "Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "7Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -25,7 +40,12 @@
 },
 {
       "title": "The Fifth Element",
-      "author": "Stanley Kubrik",
+      "director": {
+            "name": "Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -33,7 +53,12 @@
 },
 {
       "title": "The Expanse",
-      "author": "",
+      "director": {
+            "name": "Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "8Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -41,7 +66,12 @@
 },
 {
       "title": "Star Wars III",
-      "author": "Steven Spielberg",
+      "director": {
+            "name": "Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -49,7 +79,12 @@
 },
 {
       "title": "Riddick",
-      "author": "",
+      "director": {
+            "name": "1Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -57,7 +92,12 @@
 },
 {
       "title": "Star Trek VIII",
-      "author": "Rick Berman",
+      "director": {
+            "name": "2Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -65,7 +105,12 @@
 },
 {
       "title": "Stargate",
-      "author": "Rick Berman",
+      "director": {
+            "name": "3Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"
@@ -73,7 +118,12 @@
 },
 {
       "title": "Star Trek VIII",
-      "author": "Rick Berman",
+      "director": {
+            "name": "4Ridley Scott",
+            "birth_year": "1963",
+            "death_year": "-",
+            "bio": "Sir Ridley Scott GBE (born 30 November 1937) is a British filmmaker. [1] He is best known for directing films in the science fiction, crime and historical drama genres. His work is known for its atmospheric and highly concentrated visual style."
+      },
       "genre": {
             "name": "historical",
             "description": "Set in historical times"

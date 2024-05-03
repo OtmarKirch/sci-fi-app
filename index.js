@@ -58,6 +58,24 @@ app.get('/movies/genre/:title', (req, res) => {
   });
 });
 
+//return data about director
+app.get('/movies/director/:title', (req, res) => {
+  fs.readFile('./data/movies.json', 'utf-8', (err, data) => {
+    const movies = JSON.parse(data);
+
+    const reqMovie = movies.find((movie) => {
+      return movie.title.toLowerCase() === req.params.title;
+    });
+
+    if (reqMovie) {
+      const genre = reqMovie.director
+      res.json(genre);
+    } else {
+      res.status(404).send('404: Movie could not be found.');
+    }
+  });
+});
+
 
 app.use(express.static('public'));
 
