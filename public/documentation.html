@@ -12,7 +12,7 @@
         color: rgb(159, 24, 24);
         background-color: rgb(162, 161, 161);
         border-radius: 10%;
-        padding: 3px 5px
+        padding: 3px 5px;
       }
     </style>
   </head>
@@ -30,9 +30,9 @@
     <h2>Current State</h2>
     <p>
       The server is set up with using node.js and express. The website can be
-      locally hosted. There are three endpoints that can be reached and handled,
-      that is "/", "movies" and "documentation". Requests are logged by
-      middleware using morgan.
+      locally hosted. Several endpoints have been implemented for retrieving
+      movie data, registering users and adding favorite movies. Requests are
+      logged by middleware using morgan.
     </p>
     <h2>APIs</h2>
     <div>
@@ -46,54 +46,60 @@
         Return data (description, genre, director, image URL, whether it’s
         featured or not) about a single movie by title to the user
       </p>
-      <span class="method">GET</span> <code>/movies/:title</code>
+      <span class="method">GET</span> <code>/movies/{title}</code>
     </div>
     <div>
       <h3>Return data about a genre</h3>
       <p>
-        Return data about a genre (description) by name/title (e.g., “Thriller”)
+        Return data about a genre (description) by title of the movie in JSON
+        format.
       </p>
-      <span class="method">GET</span> <code>/movies/genres/:title</code>
+      <span class="method">GET</span> <code>/movies/genre/{title}</code>
     </div>
     <div>
       <h3>Return data about a director</h3>
-      <p>Return data about a director (bio, birth year, death year) by name</p>
-      <span class="method">GET</span> <code>/movies/director</code>
+      <p>
+        Return data about a director (bio, birth year, death year) by name in
+        JSON format.
+      </p>
+      <span class="method">GET</span> <code>/movies/{director}</code>
     </div>
     <div>
       <h3>Register new user</h3>
       <p>Allows new users to register.</p>
-      <p>Add a body in JSON format like this: <code>{"name": "chantal"}</code>. This example will register a new user with the username "chantal"</p>
+      <p>
+        Add a body in JSON format like this:
+        <code>{"name": "mike", "email": "mike@mike.com"}</code>. This example
+        will register a new user with the username "mike" and the email address
+        "mike@mike.com
+      </p>
       <span class="method">POST</span> <code>/users/register</code>
     </div>
     <div>
       <h3>Update user name</h3>
       <p>Allow users to update their user info (username)</p>
-      <span class="method">PUT</span> <code>/users/:name/:newusername</code>
-    </div>
-    <div>
-      <h3>Add movie to favorites</h3>
-      <p>
-        Allow users to add a movie to their list of favorites (showing only a
-        text that a movie has been added)
-      </p>
-      <span class="method">POST</span> <code>/users/:favoritemovie</code>
-    </div>
-    <div>
-      <h3>Remove a movie from favorites</h3>
-      <p>
-        Allow users to remove a movie from their list of favorites (showing only
-        a text that a movie has been removed)
-      </p>
-      <span class="method">DELETE</span> <code>/users/:removefavmovie</code>
+      <span class="method">PUT</span> <code>/users/{username}</code>
     </div>
     <div>
       <h3>Deregister user</h3>
+      <p>Allow existing users to deregister their email address.</p>
       <p>
-        Allow existing users to deregister (showing only a text that a user
-        email has been removed)
+        Add a body in JSON format like this: <code>{"name": "mike"}</code>. This
+        example will delete Mike's email address in the registry.
       </p>
-      <span class="method">DELETE</span> <code>/users/:name</code>
+      <span class="method">DELETE</span> <code>/users/delete</code>
+    </div>
+    <div>
+      <h3>Add movie to favorites</h3>
+      <p>Allows users to add a movie to their list of favorites.</p>
+      <span class="method">POST</span>
+      <code>/users/{username}/{favoritemovie}</code>
+    </div>
+    <div>
+      <h3>Remove a movie from favorites</h3>
+      <p>Allows users to remove a movie from their list of favorites.</p>
+      <span class="method">DELETE</span>
+      <code>/users/{username}/{favoritemovie}</code>
     </div>
   </body>
 </html>
