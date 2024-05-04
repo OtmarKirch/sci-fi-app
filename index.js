@@ -24,20 +24,25 @@ let usersRepository = (function () {
       });
       return userToGet;
     },
-    addUser: (userName) => {
+    addUser: (userName, email) => {
       userList.push({
         userName: userName,
         id: uuid.v4(),
+        email: email,
         favoriteMovies: [],
       });
     },
     deleteUser: (userName) => {
-      userList.forEach((item, i) => {
-        if (item.userName === userName) {
-          userList.splice(i, 1);
-        }
-      });
-      console.log('called deleteUser function');
+      let userDeleted = false;
+      if (usersRepository.getUser(userName)) {
+        userList.forEach((user) => {
+          if (user.userName === userName) {
+            user.email = '';
+            userDeleted = true;
+          }
+        });
+      }
+      return userDeleted;
     },
     changeUserName: (oldUserName, newUserName) => {
       let userNameChanged = false;
@@ -73,8 +78,10 @@ let usersRepository = (function () {
         userList.forEach((user) => {
           if (user.userName === userName) {
             const indexMovie = user.favoriteMovies.indexOf(movieTitle);
-            user.favoriteMovies.splice(indexMovie, 1);
-            favoriteMovieRemoved = true;
+            if (indexMovie != -1) {
+              user.favoriteMovies.splice(indexMovie, 1);
+              favoriteMovieRemoved = true;
+            }
           }
         });
         return favoriteMovieRemoved;
@@ -160,19 +167,21 @@ app.get('/movies/director/:title', (req, res) => {
 //register new user
 app.post('/user/register/', (req, res) => {
   const newUser = req.body.name;
+  const email = req.body.email;
 
   if (newUser) {
-    usersRepository.addUser(newUser);
+    usersRepository.addUser(newUser, email);
     console.log(usersRepository.getAll());
     res.send('New user ' + newUser + ' has been registered.');
   } else {
-    res.status(500).send('500: Format of new user cannot be accepted.');
+    res.status(400).send('400: Format of new user cannot be accepted.');
   }
 });
 
 //update username
 app.put('/user/:userName', (req, res) => {
   const userNameToUpdate = req.body.name;
+
   const userNameChanged = usersRepository.changeUserName(
     req.params.userName,
     userNameToUpdate
@@ -183,19 +192,18 @@ app.put('/user/:userName', (req, res) => {
       'User ' + req.params.userName + ' has been changed to ' + userNameToUpdate
     );
   } else {
-    res.status(500).send('500: Format of new user name cannot be accepted.');
+    res.status(400).send('400: Format of new user name cannot be accepted.');
   }
 });
 
 //deregister user
 app.delete('/user/delete', (req, res) => {
   const userToDelete = req.body.name;
-
-  if (userToDelete) {
-    usersRepository.deleteUser(userToDelete);
-    res.send('User ' + userToDelete + ' has been deleted.');
+  const userDeleted = usersRepository.deleteUser(userToDelete);
+  if (userDeleted) {
+    res.send("User's " + userToDelete + ' email address has been deleted.');
   } else {
-    res.status(500).send('500: Format of new user cannot be accepted.');
+    res.status(400).send('400: Format of user cannot be accepted.');
   }
 });
 
