@@ -15,34 +15,71 @@ let usersRepository = (function () {
     getAll: () => {
       return userList;
     },
-    addUser: (name) => {
+    getUser: (userName) => {
+      let userToGet;
+      userList.forEach((user) => {
+        if (user.userName === userName) {
+          userToGet = user;
+        }
+      });
+      return userToGet;
+    },
+    addUser: (userName) => {
       userList.push({
-        userName: name,
+        userName: userName,
         id: uuid.v4(),
-        favoriteMovies: {},
+        favoriteMovies: [],
       });
     },
-    deleteUser: (name) => {
+    deleteUser: (userName) => {
       userList.forEach((item, i) => {
-        if (item.userName === name) {
+        if (item.userName === userName) {
           userList.splice(i, 1);
         }
       });
       console.log('called deleteUser function');
     },
-    changeUserName: (oldName, newName) => {
-        let userNameChanged = false;
-      userList.forEach((item, i) => {
-        if (item.userName === oldName) {
-          item.userName = newName;
+    changeUserName: (oldUserName, newUserName) => {
+      let userNameChanged = false;
+      userList.forEach((item) => {
+        if (item.userName === oldUserName) {
+          item.userName = newUserName;
           userNameChanged = true;
         }
       });
       console.log('called changeUserName function');
       return userNameChanged;
     },
-    addFavoriteMovie: () => {},
-    removeFavoriteMovie: () => {},
+    addFavoriteMovie: (userName, movieTitle) => {
+      let favoriteMovieAdded = false;
+      const user = usersRepository.getUser(userName);
+      console.log(user);
+      if (user) {
+        userList.forEach((user) => {
+          if (user.userName === userName) {
+            user.favoriteMovies.push(movieTitle);
+            console.log(user);
+            favoriteMovieAdded = true;
+          }
+        });
+      }
+      return favoriteMovieAdded;
+    },
+    removeFavoriteMovie: (userName, movieTitle) => {
+      let favoriteMovieRemoved = false;
+      const user = usersRepository.getUser(userName);
+      console.log(user);
+      if (user) {
+        userList.forEach((user) => {
+          if (user.userName === userName) {
+            const indexMovie = user.favoriteMovies.indexOf(movieTitle);
+            user.favoriteMovies.splice(indexMovie, 1);
+            favoriteMovieRemoved = true;
+          }
+        });
+        return favoriteMovieRemoved;
+      }
+    },
   };
 })();
 
@@ -156,10 +193,43 @@ app.delete('/user/delete', (req, res) => {
 
   if (userToDelete) {
     usersRepository.deleteUser(userToDelete);
-    console.log(usersRepository.getAll());
     res.send('User ' + userToDelete + ' has been deleted.');
   } else {
     res.status(500).send('500: Format of new user cannot be accepted.');
+  }
+});
+
+//add favorite movie
+app.post('/user/:name/:favoritemovie', (req, res) => {
+  const user = req.params.name;
+  const movieToAdd = req.params.favoritemovie;
+  const favoriteMovieAdded = usersRepository.addFavoriteMovie(user, movieToAdd);
+  if (favoriteMovieAdded) {
+    res.send(
+      'Movie ' + movieToAdd + ' added to favorite movies list of user ' + user
+    );
+  } else {
+    res.status(500).send('500: User or movie not registered.');
+  }
+});
+
+//delete favorite movie
+app.delete('/user/:name/:favoritemovie', (req, res) => {
+  const user = req.params.name;
+  const movieToDelete = req.params.favoritemovie;
+  const favoriteMovieDeleted = usersRepository.removeFavoriteMovie(
+    user,
+    movieToDelete
+  );
+  if (favoriteMovieDeleted) {
+    res.send(
+      'Movie ' +
+        movieToDelete +
+        ' deleted from favorite movies list of user ' +
+        user
+    );
+  } else {
+    res.status(500).send('500: User or movie not registered.');
   }
 });
 
