@@ -10,95 +10,12 @@ const Models = require("./models.js");
 const app = express();
 
 const Movies = Models.Movie;
-const Users = Models.Users;
+const Users = Models.User;
 
 mongoose.connect("mongodb://localhost:27017/mySciFiApp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-//list of registered users
-let usersRepository = (function () {
-  let userList = [];
-
-  return {
-    getAll: () => {
-      return userList;
-    },
-    getUser: (userName) => {
-      let userToGet;
-      userList.forEach((user) => {
-        if (user.userName === userName) {
-          userToGet = user;
-        }
-      });
-      return userToGet;
-    },
-    addUser: (userName, email) => {
-      userList.push({
-        userName: userName,
-        id: uuid.v4(),
-        email: email,
-        favoriteMovies: [],
-      });
-    },
-    deleteUser: (userName) => {
-      let userDeleted = false;
-      if (usersRepository.getUser(userName)) {
-        userList.forEach((user) => {
-          if (user.userName === userName) {
-            user.email = "";
-            userDeleted = true;
-          }
-        });
-      }
-      return userDeleted;
-    },
-    changeUserName: (oldUserName, newUserName) => {
-      let userNameChanged = false;
-      userList.forEach((item) => {
-        if (item.userName === oldUserName) {
-          item.userName = newUserName;
-          userNameChanged = true;
-        }
-      });
-      console.log("called changeUserName function");
-      return userNameChanged;
-    },
-    addFavoriteMovie: (userName, movieTitle) => {
-      let favoriteMovieAdded = false;
-      const user = usersRepository.getUser(userName);
-      console.log(user);
-      if (user) {
-        userList.forEach((user) => {
-          if (user.userName === userName) {
-            user.favoriteMovies.push(movieTitle);
-            console.log(user);
-            favoriteMovieAdded = true;
-          }
-        });
-      }
-      return favoriteMovieAdded;
-    },
-    removeFavoriteMovie: (userName, movieTitle) => {
-      let favoriteMovieRemoved = false;
-      const user = usersRepository.getUser(userName);
-      console.log(user);
-      if (user) {
-        userList.forEach((user) => {
-          if (user.userName === userName) {
-            const indexMovie = user.favoriteMovies.indexOf(movieTitle);
-            if (indexMovie != -1) {
-              user.favoriteMovies.splice(indexMovie, 1);
-              favoriteMovieRemoved = true;
-            }
-          }
-        });
-        return favoriteMovieRemoved;
-      }
-    },
-  };
-})();
 
 app.use(bodyParser.json());
 
@@ -117,72 +34,90 @@ app.get("/", (req, res) => {
 //return all movies vom the db as json file
 app.get("/movies", (req, res) => {
   Movies.find().then((movies) => {
-    res.send(movies);
-  });
-});
-
-//return all movies in a JSON file
-app.get("/moviesOld", (req, res) => {
-  fs.readFile("./data/movies.json", "utf8", (err, data) => {
-    res.send(data);
+    res.status(200).json(movies);
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
   });
 });
 
 //return a single movie in a JSON file
 app.get("/movies/:title", (req, res) => {
-  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
-    const movies = JSON.parse(data);
-
-    const reqData = movies.find((movie) => {
-      return movie.title.toLowerCase() === req.params.title;
-    });
-
-    if (reqData) {
-      res.json(reqData);
-    } else {
-      res.status(404).send("404: Movie could not be found.");
+  reqTitle = req.params.title
+  Movies.findOne({"title": reqTitle}).then((movie) =>{
+    if(movie){
+      console.log(movie)
+      res.status(200).json(movie)
+    }else{
+      res.status(404).send("404: Movie could not be found");
     }
-  });
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
+  })
 });
 
 //return genre of a movie
 app.get("/movies/genre/:title", (req, res) => {
-  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
-    const movies = JSON.parse(data);
-
-    const reqMovie = movies.find((movie) => {
-      return movie.title.toLowerCase() === req.params.title;
-    });
-
-    if (reqMovie) {
-      const genre = reqMovie.genre;
-      res.json(genre);
-    } else {
-      res.status(404).send("404: Movie could not be found.");
-    }
-  });
+  reqTitle = req.params.title
+  Movies.findOne({"title": reqTitle}).then((movie) => {
+    console.log(movie)
+    if(movie){
+    genre = movie.genre
+    res.status(200).json(genre)
+  } else {
+    res.status(404).send("404: Movie could not be found.")
+  }
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
+  })
 });
 
 //return data about director
 app.get("/movies/director/:title", (req, res) => {
-  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
-    const movies = JSON.parse(data);
+  reqTitle = req.params.title
+  Movies.findOne({"title": reqTitle}).then((movie) => {
+    if (movie){
+    director = movie.director
+    res.status(200).json(director)
+  } else {
+    res.status(404).send("404: Movie could not be found.")
+  }
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
+  })
+});
 
-    const reqMovie = movies.find((movie) => {
-      return movie.title.toLowerCase() === req.params.title;
-    });
-
-    if (reqMovie) {
-      const genre = reqMovie.director;
-      res.json(genre);
+//register new user in db
+app.post("/user/register/", async (req, res) => {
+  await Users.findOne({ Username: req.body.Username }).then((user) => {
+    if (user) {
+      return res
+        .status(400)
+        .send("User " + req.body.Username + " already exists.");
     } else {
-      res.status(404).send("404: Movie could not be found.");
+      Users.create({
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      }).then((user) => {
+        res.status(201).json(user);
+      }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
     }
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
   });
 });
 
-//register new user
-app.post("/user/register/", (req, res) => {
+//OLD register new user
+app.post("/user/registerold/", (req, res) => {
   const newUser = req.body.name;
   const email = req.body.email;
 
