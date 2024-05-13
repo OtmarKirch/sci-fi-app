@@ -1,11 +1,21 @@
-const express = require('express');
-const morgan = require('morgan');
-const fs = require('fs');
-const path = require('path');
-const bodyParser = require('body-parser');
-const uuid = require('uuid');
+const express = require("express");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
+const bodyParser = require("body-parser");
+const uuid = require("uuid");
+const mongoose = require("mongoose");
+const Models = require("./models.js");
 
 const app = express();
+
+const Movies = Models.Movie;
+const Users = Models.Users;
+
+mongoose.connect("mongodb://localhost:27017/mySciFiApp", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 //list of registered users
 let usersRepository = (function () {
@@ -37,7 +47,7 @@ let usersRepository = (function () {
       if (usersRepository.getUser(userName)) {
         userList.forEach((user) => {
           if (user.userName === userName) {
-            user.email = '';
+            user.email = "";
             userDeleted = true;
           }
         });
@@ -52,7 +62,7 @@ let usersRepository = (function () {
           userNameChanged = true;
         }
       });
-      console.log('called changeUserName function');
+      console.log("called changeUserName function");
       return userNameChanged;
     },
     addFavoriteMovie: (userName, movieTitle) => {
@@ -94,26 +104,33 @@ app.use(bodyParser.json());
 
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
-  flags: 'a',
+const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
+  flags: "a",
 });
 //setup the logger
-app.use(morgan('combined', { stream: accessLogStream }));
+app.use(morgan("combined", { stream: accessLogStream }));
 
-app.get('/', (req, res) => {
-  res.send('Welcome to my Sci-Fi page!');
+app.get("/", (req, res) => {
+  res.send("Welcome to my Sci-Fi page!");
+});
+
+//return all movies vom the db as json file
+app.get("/movies", (req, res) => {
+  Movies.find().then((movies) => {
+    res.send(movies);
+  });
 });
 
 //return all movies in a JSON file
-app.get('/movies', (req, res) => {
-  fs.readFile('./data/movies.json', 'utf8', (err, data) => {
+app.get("/moviesOld", (req, res) => {
+  fs.readFile("./data/movies.json", "utf8", (err, data) => {
     res.send(data);
   });
 });
 
 //return a single movie in a JSON file
-app.get('/movies/:title', (req, res) => {
-  fs.readFile('./data/movies.json', 'utf-8', (err, data) => {
+app.get("/movies/:title", (req, res) => {
+  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
     const movies = JSON.parse(data);
 
     const reqData = movies.find((movie) => {
@@ -123,14 +140,14 @@ app.get('/movies/:title', (req, res) => {
     if (reqData) {
       res.json(reqData);
     } else {
-      res.status(404).send('404: Movie could not be found.');
+      res.status(404).send("404: Movie could not be found.");
     }
   });
 });
 
 //return genre of a movie
-app.get('/movies/genre/:title', (req, res) => {
-  fs.readFile('./data/movies.json', 'utf-8', (err, data) => {
+app.get("/movies/genre/:title", (req, res) => {
+  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
     const movies = JSON.parse(data);
 
     const reqMovie = movies.find((movie) => {
@@ -141,14 +158,14 @@ app.get('/movies/genre/:title', (req, res) => {
       const genre = reqMovie.genre;
       res.json(genre);
     } else {
-      res.status(404).send('404: Movie could not be found.');
+      res.status(404).send("404: Movie could not be found.");
     }
   });
 });
 
 //return data about director
-app.get('/movies/director/:title', (req, res) => {
-  fs.readFile('./data/movies.json', 'utf-8', (err, data) => {
+app.get("/movies/director/:title", (req, res) => {
+  fs.readFile("./data/movies.json", "utf-8", (err, data) => {
     const movies = JSON.parse(data);
 
     const reqMovie = movies.find((movie) => {
@@ -159,27 +176,27 @@ app.get('/movies/director/:title', (req, res) => {
       const genre = reqMovie.director;
       res.json(genre);
     } else {
-      res.status(404).send('404: Movie could not be found.');
+      res.status(404).send("404: Movie could not be found.");
     }
   });
 });
 
 //register new user
-app.post('/user/register/', (req, res) => {
+app.post("/user/register/", (req, res) => {
   const newUser = req.body.name;
   const email = req.body.email;
 
   if (newUser) {
     usersRepository.addUser(newUser, email);
     console.log(usersRepository.getAll());
-    res.send('New user ' + newUser + ' has been registered.');
+    res.send("New user " + newUser + " has been registered.");
   } else {
-    res.status(400).send('400: Format of new user cannot be accepted.');
+    res.status(400).send("400: Format of new user cannot be accepted.");
   }
 });
 
 //update username
-app.put('/user/:userName', (req, res) => {
+app.put("/user/:userName", (req, res) => {
   const userNameToUpdate = req.body.name;
 
   const userNameChanged = usersRepository.changeUserName(
@@ -189,40 +206,40 @@ app.put('/user/:userName', (req, res) => {
   if (userNameChanged) {
     console.log(usersRepository.getAll());
     res.send(
-      'User ' + req.params.userName + ' has been changed to ' + userNameToUpdate
+      "User " + req.params.userName + " has been changed to " + userNameToUpdate
     );
   } else {
-    res.status(400).send('400: Format of new user name cannot be accepted.');
+    res.status(400).send("400: Format of new user name cannot be accepted.");
   }
 });
 
 //deregister user
-app.delete('/user/delete', (req, res) => {
+app.delete("/user/delete", (req, res) => {
   const userToDelete = req.body.name;
   const userDeleted = usersRepository.deleteUser(userToDelete);
   if (userDeleted) {
-    res.send("User's " + userToDelete + ' email address has been deleted.');
+    res.send("User's " + userToDelete + " email address has been deleted.");
   } else {
-    res.status(400).send('400: Format of user cannot be accepted.');
+    res.status(400).send("400: Format of user cannot be accepted.");
   }
 });
 
 //add favorite movie
-app.post('/user/:name/:favoritemovie', (req, res) => {
+app.post("/user/:name/:favoritemovie", (req, res) => {
   const user = req.params.name;
   const movieToAdd = req.params.favoritemovie;
   const favoriteMovieAdded = usersRepository.addFavoriteMovie(user, movieToAdd);
   if (favoriteMovieAdded) {
     res.send(
-      'Movie ' + movieToAdd + ' added to favorite movies list of user ' + user
+      "Movie " + movieToAdd + " added to favorite movies list of user " + user
     );
   } else {
-    res.status(500).send('500: User or movie not registered.');
+    res.status(500).send("500: User or movie not registered.");
   }
 });
 
 //delete favorite movie
-app.delete('/user/:name/:favoritemovie', (req, res) => {
+app.delete("/user/:name/:favoritemovie", (req, res) => {
   const user = req.params.name;
   const movieToDelete = req.params.favoritemovie;
   const favoriteMovieDeleted = usersRepository.removeFavoriteMovie(
@@ -231,24 +248,24 @@ app.delete('/user/:name/:favoritemovie', (req, res) => {
   );
   if (favoriteMovieDeleted) {
     res.send(
-      'Movie ' +
+      "Movie " +
         movieToDelete +
-        ' deleted from favorite movies list of user ' +
+        " deleted from favorite movies list of user " +
         user
     );
   } else {
-    res.status(500).send('500: User or movie not registered.');
+    res.status(500).send("500: User or movie not registered.");
   }
 });
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 //error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+  res.status(500).send("Something went wrong!");
 });
 
 app.listen(8080, () => {
-  console.log('App is up and running on port 8080');
+  console.log("App is up and running on port 8080");
 });
