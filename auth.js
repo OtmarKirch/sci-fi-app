@@ -1,14 +1,14 @@
 const jwtSecret = "your_jwt_secret";
 
 const jwt = require("jsonwebtoken");
-const passport = require("passposrt");
+const passport = require("passport");
 
 require("./passport");
 
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
     subject: user.Username,
-    expiresIn: "7d2",
+    expiresIn: "7d",
     algorithm: "HS256",
   });
 };

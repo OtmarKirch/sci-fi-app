@@ -14,7 +14,7 @@ passport.use(
       passwordField: "Password",
     },
     async (username, password, callback) => {
-      console.log("${username} ${password}");
+      console.log(`${username} ${password}`);
       await Users.findOne({ Username: username })
         .then((user) => {
           if (!user) {
@@ -41,7 +41,7 @@ passport.use(
       secretOrKey: "your_jwt_secret",
     },
     async (jwtPayload, callback) => {
-      return await Users.findById(jwt.Payload._id)
+      return await Users.findById(jwtPayload._id)
         .then((user) => {
           return callback(null, user);
         })
