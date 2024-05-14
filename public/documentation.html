@@ -33,9 +33,40 @@
       The server is set up with using node.js and express. The website can be
       locally hosted. Several endpoints have been implemented for retrieving
       movie data, registering users and adding favorite movies. Requests are
-      logged by middleware using morgan. The data base is implemented with MongoDB.
+      logged by middleware using morgan. The data base is implemented with MongoDB. New users can now register. Access and manipulation of all data is now restricted.
     </p>
+    <h2>Access</h2>
+      In order to access or manipulate data, users have to register via the <code>/users/register</code> endpoint. The user can then log in  with the <code>/login</code> endpoint, passing "Password" and "Username" as parameters.
+      After logging in, a bearer token (7 days validity) is sent back. The bearer token has to be used to access any endpoint other than the <code>/users/register</code> and <code>/login</code> endpoints. All users can access information about movies. User data can only be changed by the respective user. 
+      
     <h2>APIs</h2>
+    <div>
+      <h3>Register new user</h3>
+      <p>Allows new users to register.</p>
+      <p>Add a body in JSON format like this:</p>
+        <pre><code class="language-json">
+ {"name": "Mike Smith", "username":"MikeS", "email": "mike@mike.com", "password":"3nd93l2wiv", "Birthday":"19.09.1991"}
+        </code></pre>
+        <p>Birthday is optional. All other fields are required. Favorite movies can be added and deleted with the favorite movie endpoints below.</p>
+      <span class="method">POST</span> <code>/users/register</code>
+      <p>Response example:</p>
+      <pre><code class="language-json">
+      {
+          "name": "Mike Smith",
+          "username": "MikeS",
+          "email": "mike@mike.com",
+          "password": "3nd93l2wiv",
+          "favoriteMovies": [],
+          "_id": "664306dcf2678d2d0a509b6c",
+          "__v": 0
+      }
+      </code></pre>
+    </div>
+    <div>
+      <h3>Login</h3>
+      <p>Users can log in and generate a bearer token necessary to access and manipulating data. "Password" and "Username" have to be passed along as parameters.</p>
+      <span class="method">POST</span> <code>/login</code>
+    </div>
     <div>
       <h3>Return all movies</h3>
       <p>Return a list of ALL movies as a JSON file.</p>
@@ -119,28 +150,6 @@
           "description": "Christopher Nolan is a British-American film director, screenwriter, and producer. He is known for his innovative storytelling, intricate plots, and visually stunning cinematography. Nolan's films often explore themes of identity, time, and morality, captivating audiences with their complexity and depth.",
           "birthyear": "1970-07-30T00:00:00.000Z",
           "deathyear": "1970-01-01T00:00:00.000Z"
-      }
-      </code></pre>
-    </div>
-    <div>
-      <h3>Register new user</h3>
-      <p>Allows new users to register.</p>
-      <p>Add a body in JSON format like this:</p>
-        <pre><code class="language-json">
- {"name": "Mike Smith", "username":"MikeS", "email": "mike@mike.com", "password":"3nd93l2wiv", "Birthday":"19.09.1991"}
-        </code></pre>
-        <p>Birthday is optional. All other fields are required. Favorite movies can be added and deleted with the favorite movie endpoints below.</p>
-      <span class="method">POST</span> <code>/users/register</code>
-      <p>Response example:</p>
-      <pre><code class="language-json">
-      {
-          "name": "Mike Smith",
-          "username": "MikeS",
-          "email": "mike@mike.com",
-          "password": "3nd93l2wiv",
-          "favoriteMovies": [],
-          "_id": "664306dcf2678d2d0a509b6c",
-          "__v": 0
       }
       </code></pre>
     </div>
