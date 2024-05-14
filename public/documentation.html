@@ -32,7 +32,7 @@
       The server is set up with using node.js and express. The website can be
       locally hosted. Several endpoints have been implemented for retrieving
       movie data, registering users and adding favorite movies. Requests are
-      logged by middleware using morgan.
+      logged by middleware using morgan. The data base is implemented with MongoDB.
     </p>
     <h2>APIs</h2>
     <div>
@@ -43,8 +43,7 @@
     <div>
       <h3>Return a single entry</h3>
       <p>
-        Return data (description, genre, director, image URL, whether it’s
-        featured or not) about a single movie by title to the user
+        Return data (description, genre, director and ranking) about a single movie by title to the user
       </p>
       <span class="method">GET</span> <code>/movies/{title}</code>
     </div>
@@ -59,47 +58,50 @@
     <div>
       <h3>Return data about a director</h3>
       <p>
-        Return data about a director (bio, birth year, death year) by name in
+        Return data about a director (bio, birth year, death year) by movie title in
         JSON format.
       </p>
-      <span class="method">GET</span> <code>/movies/{director}</code>
+      <span class="method">GET</span> <code>/movies/director/{title}</code>
     </div>
     <div>
       <h3>Register new user</h3>
       <p>Allows new users to register.</p>
       <p>
         Add a body in JSON format like this:
-        <code>{"name": "mike", "email": "mike@mike.com"}</code>. This example
-        will register a new user with the username "mike" and the email address
-        "mike@mike.com
+        <code>{"name": "Mike Smith", "username":"MikeS", "email": "mike@mike.com", "password":"3nd93l2wiv", "Birthday":"19.09.1991"}</code>.
+        Birthday is optional. All other fields are required.
       </p>
       <span class="method">POST</span> <code>/users/register</code>
     </div>
     <div>
       <h3>Update user name</h3>
-      <p>Allow users to update their user info (username)</p>
-      <span class="method">PUT</span> <code>/users/{username}</code>
+      <p>Allows users to update their username. Add a body in JSON format like this:
+        <code>{"oldUserName":"My Old Username", "newUsername":"My New Username"}</code>
+      </p>
+      <span class="method">PUT</span> <code>/users/newusername</code>
     </div>
     <div>
       <h3>Deregister user</h3>
       <p>Allow existing users to deregister their email address.</p>
       <p>
-        Add a body in JSON format like this: <code>{"name": "mike"}</code>. This
-        example will delete Mike's email address in the registry.
+        Add a body in JSON format like this: <code>{"username": "MikeS"}</code>.
       </p>
       <span class="method">DELETE</span> <code>/users/delete</code>
     </div>
     <div>
       <h3>Add movie to favorites</h3>
-      <p>Allows users to add a movie to their list of favorites.</p>
+      <p>Allows users to add a movie to their list of favorites. Add a body in JSON format like this:
+        <code>{"username":"MikeS", "favoriteMovie":"Inception"}</code>
+      </p>
       <span class="method">POST</span>
-      <code>/users/{username}/{favoritemovie}</code>
+      <code>/users/favoritemovie</code>
     </div>
     <div>
       <h3>Remove a movie from favorites</h3>
-      <p>Allows users to remove a movie from their list of favorites.</p>
+      <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format like this:
+        <code>{"username":"MikeS", "favoriteMovie":"Inception"}</code></p>
       <span class="method">DELETE</span>
-      <code>/users/{username}/{favoritemovie}</code>
+      <code>/users/favoritemovie</code>
     </div>
   </body>
 </html>

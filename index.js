@@ -119,7 +119,7 @@ app.post("/user/register/", async (req, res) => {
 });
 
 //update username
-app.patch("/user/newusername", (req, res) => {
+app.put("/user/newusername", (req, res) => {
   const oldUsername = req.body.oldUserName
   const newUsername = req.body.newUserName;
   Users.findOneAndUpdate({username: oldUsername}, {
@@ -144,7 +144,7 @@ app.delete("/user/delete", (req, res) => {
 });
 
 //add favorite movie
-app.post("/user/addfavoritemovie/", (req, res) => {
+app.post("/user/favoritemovie/", (req, res) => {
   const reqUsername = req.body.username;
   const titleMovie = req.body.favoriteMovie;
   Movies.findOne({title:titleMovie}).then((movie)=>{
@@ -161,7 +161,7 @@ app.post("/user/addfavoritemovie/", (req, res) => {
 });
 
 //delete favorite movie
-app.delete("/user/deletefavoritemovie/", (req, res) => {
+app.delete("/user/favoritemovie/", (req, res) => {
   const reqUsername = req.body.username;
   const titleMovie = req.body.favoriteMovie;
   Movies.findOne({title:titleMovie}).then((movie)=>{
