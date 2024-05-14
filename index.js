@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const Models = require("./models.js");
 
 const app = express();
+let auth = require("./auth")(app);
+const passport = require('passport');
+require('./passport');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -32,7 +35,7 @@ app.get("/", (req, res) => {
 });
 
 //return all movies vom the db as json file
-app.get("/movies", (req, res) => {
+app.get("/movies", passport.authenticate("jwt", {session: false}), (req, res) => {
   Movies.find().then((movies) => {
     res.status(200).json(movies);
   }).catch((error) => {
