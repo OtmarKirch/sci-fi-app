@@ -91,7 +91,7 @@ app.get("/movies/director/:title", (req, res) => {
 });
 
 //register new user in db
-app.post("/user/register/", async (req, res) => {
+app.post("/users/register/", async (req, res) => {
   const newUser = req.body
   await Users.findOne({ username: newUser.username }).then((user) => {
     if (user) {
@@ -119,7 +119,7 @@ app.post("/user/register/", async (req, res) => {
 });
 
 //update username
-app.put("/user/newusername", (req, res) => {
+app.put("/users/newusername", (req, res) => {
   const oldUsername = req.body.oldUserName
   const newUsername = req.body.newUserName;
   Users.findOneAndUpdate({username: oldUsername}, {
@@ -133,7 +133,7 @@ app.put("/user/newusername", (req, res) => {
 });
 
 //deregister user
-app.delete("/user/delete", (req, res) => {
+app.delete("/users/delete", (req, res) => {
   const userToDelete = req.body.username
   Users.findOneAndDelete({username:userToDelete}, { new: true }).then((user) => {
     res.status(200).send("User " + user.username + " deleted.")
@@ -144,13 +144,13 @@ app.delete("/user/delete", (req, res) => {
 });
 
 //add favorite movie
-app.post("/user/favoritemovie/", (req, res) => {
+app.post("/users/favoritemovie/", (req, res) => {
   const reqUsername = req.body.username;
   const titleMovie = req.body.favoriteMovie;
   Movies.findOne({title:titleMovie}).then((movie)=>{
     if(movie){
       Users.findOneAndUpdate({username:reqUsername}, {$addToSet:{favoriteMovies: movie._id}}).then((user)=>{
-      res.status(200).send(user)})
+      res.status(200).send(titleMovie + " was added to favorite movie list of " + reqUsername + ".")})
     }else{
       res.status(400).send("400: Movie not registered.")
     }
@@ -161,13 +161,13 @@ app.post("/user/favoritemovie/", (req, res) => {
 });
 
 //delete favorite movie
-app.delete("/user/favoritemovie/", (req, res) => {
+app.delete("/users/favoritemovie/", (req, res) => {
   const reqUsername = req.body.username;
   const titleMovie = req.body.favoriteMovie;
   Movies.findOne({title:titleMovie}).then((movie)=>{
     if(movie){
       Users.findOneAndUpdate({username:reqUsername}, {$pull:{favoriteMovies: movie._id}}).then((user)=>{
-      res.status(200).send(user)})
+      res.status(200).send(titleMovie + " was removed from favorite movie list of " + reqUsername + ".")})
     }else{
       res.status(400).send("400: Movie not registered.")
     }

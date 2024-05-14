@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Documentation File</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" rel="stylesheet" />
     <style>
       code {
         background-color: beige;
@@ -39,6 +40,29 @@
       <h3>Return all movies</h3>
       <p>Return a list of ALL movies as a JSON file.</p>
       <span class="method">GET</span> <code>/movies</code>
+      <p>Response example (description shortened in example):</p>
+      <pre><code class="language-json">
+ [
+        {
+        "genre": {
+            "name": "Drama",
+            "description": "Drama films are ...."
+        },
+        "director": {
+            "name": "Robert Zemeckis",
+            "description": "Robert Zemeckis is an ....",
+            "birthyear": "1952-05-14T00:00:00.000Z",
+            "deathyear": "1970-01-01T00:00:00.000Z"
+        },
+        "_id": "663a4446f5fc80b9c0e00d8d",
+        "title": "Forrest Gump",
+        "description": "Forrest Gump is a ....",
+        "ranking": 4
+        }, 
+        {...},
+        ...
+ ]
+      </code></pre>
     </div>
     <div>
       <h3>Return a single entry</h3>
@@ -46,6 +70,25 @@
         Return data (description, genre, director and ranking) about a single movie by title to the user
       </p>
       <span class="method">GET</span> <code>/movies/{title}</code>
+      <p>Response example for the title "Inception" (descriptions shortened in example):</p>
+      <pre><code class="language-json">
+      {
+          _id: ObjectId('663a4446f5fc80b9c0e00d93'),
+          title: 'Inception',
+          description: 'new description',
+          genre: {
+            name: 'Science Fiction',
+            description: 'Science fiction films are ... .'
+          },
+          director: {
+            name: 'Christopher Nolan',
+            description: "Christopher Nolan is a ... .",
+            birthyear: ISODate('1970-07-30T00:00:00.000Z'),
+            deathyear: ISODate('1970-01-01T00:00:00.000Z')
+          },
+          ranking: 8
+      }
+      </code></pre>
     </div>
     <div>
       <h3>Return data about a genre</h3>
@@ -54,6 +97,13 @@
         format.
       </p>
       <span class="method">GET</span> <code>/movies/genre/{title}</code>
+      <p>Response example for the title "Inception":</p>
+      <pre><code class="language-json">
+      {
+          "name": "Science Fiction",
+          "description": "Science fiction films are works of fiction that explore imaginative and futuristic concepts, often involving advanced technology, space exploration, and speculative ideas about the future. These films push the boundaries of human imagination, inviting audiences to contemplate the possibilities of the unknown."
+      }
+      </code></pre>
     </div>
     <div>
       <h3>Return data about a director</h3>
@@ -62,46 +112,90 @@
         JSON format.
       </p>
       <span class="method">GET</span> <code>/movies/director/{title}</code>
+      <p>Response example for the title "Inception":</p>
+      <pre><code class="language-json">
+      {
+          "name": "Christopher Nolan",
+          "description": "Christopher Nolan is a British-American film director, screenwriter, and producer. He is known for his innovative storytelling, intricate plots, and visually stunning cinematography. Nolan's films often explore themes of identity, time, and morality, captivating audiences with their complexity and depth.",
+          "birthyear": "1970-07-30T00:00:00.000Z",
+          "deathyear": "1970-01-01T00:00:00.000Z"
+      }
+      </code></pre>
     </div>
     <div>
       <h3>Register new user</h3>
       <p>Allows new users to register.</p>
-      <p>
-        Add a body in JSON format like this:
-        <code>{"name": "Mike Smith", "username":"MikeS", "email": "mike@mike.com", "password":"3nd93l2wiv", "Birthday":"19.09.1991"}</code>.
-        Birthday is optional. All other fields are required.
-      </p>
+      <p>Add a body in JSON format like this:</p>
+        <pre><code class="language-json">
+ {"name": "Mike Smith", "username":"MikeS", "email": "mike@mike.com", "password":"3nd93l2wiv", "Birthday":"19.09.1991"}
+        </code></pre>
+        <p>Birthday is optional. All other fields are required. Favorite movies can be added and deleted with the favorite movie endpoints below.</p>
       <span class="method">POST</span> <code>/users/register</code>
+      <p>Response example:</p>
+      <pre><code class="language-json">
+      {
+          "name": "Mike Smith",
+          "username": "MikeS",
+          "email": "mike@mike.com",
+          "password": "3nd93l2wiv",
+          "favoriteMovies": [],
+          "_id": "664306dcf2678d2d0a509b6c",
+          "__v": 0
+      }
+      </code></pre>
     </div>
     <div>
       <h3>Update user name</h3>
-      <p>Allows users to update their username. Add a body in JSON format like this:
-        <code>{"oldUserName":"My Old Username", "newUsername":"My New Username"}</code>
-      </p>
+      <p>Allows users to update their username. Add a body in JSON format like this:</p>
+        <pre><code class="language-json">
+ {"oldUserName":"MikeS", "newUsername":"MSmith"}
+        </code></pre>
       <span class="method">PUT</span> <code>/users/newusername</code>
     </div>
+    <p>Response example:</p>
+    <pre><code class="language-json">
+      {
+          "_id": "664306dcf2678d2d0a509b6c",
+          "name": "Mike Smith",
+          "username": "MSmith",
+          "email": "mike@mike.com",
+          "password": "3nd93l2wiv",
+          "favoriteMovies": [],
+          "__v": 0
+      }
+    </code></pre>
     <div>
       <h3>Deregister user</h3>
-      <p>Allow existing users to deregister their email address.</p>
-      <p>
-        Add a body in JSON format like this: <code>{"username": "MikeS"}</code>.
-      </p>
+      <p>Allow existing users to deregister.</p>
+      <p>Add a body in JSON format like this:</p> 
+        <pre><code class="language-json">
+ {"username": "MSmith"}
+        </code></pre>
       <span class="method">DELETE</span> <code>/users/delete</code>
+      <p>Response example:</p>
+      "User MSmith deleted."
     </div>
     <div>
       <h3>Add movie to favorites</h3>
-      <p>Allows users to add a movie to their list of favorites. Add a body in JSON format like this:
-        <code>{"username":"MikeS", "favoriteMovie":"Inception"}</code>
-      </p>
+      <p>Allows users to add a movie to their list of favorites. Add a body in JSON format like this:</p>
+        <pre><code class="language-json">
+ {"username":"MikeS", "favoriteMovie":"Inception"}
+        </code></pre>
       <span class="method">POST</span>
       <code>/users/favoritemovie</code>
+      <p>Response example:</p>
+      "Inception was added to favorite movie list of MSmith."
     </div>
     <div>
       <h3>Remove a movie from favorites</h3>
-      <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format like this:
-        <code>{"username":"MikeS", "favoriteMovie":"Inception"}</code></p>
+      <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format like this:</p>
+        <pre><code class="language-json">
+ {"username":"MSmith", "favoriteMovie":"Inception"}
+        </code></pre>
       <span class="method">DELETE</span>
       <code>/users/favoritemovie</code>
+      <p>Response example:</p>
+      "Inception was removed from favorite movie list of MSmith."
     </div>
   </body>
 </html>
