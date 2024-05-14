@@ -92,17 +92,19 @@ app.get("/movies/director/:title", (req, res) => {
 
 //register new user in db
 app.post("/user/register/", async (req, res) => {
-  await Users.findOne({ Username: req.body.Username }).then((user) => {
+  const newUser = req.body
+  await Users.findOne({ username: newUser.username }).then((user) => {
     if (user) {
       return res
         .status(400)
-        .send("User " + req.body.Username + " already exists.");
+        .send("User " + newUser.username + " already exists.");
     } else {
       Users.create({
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
+        name: newUser.name,
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
+        Birthday: newUser.birthday,
       }).then((user) => {
         res.status(201).json(user);
       }).catch((error) => {
@@ -116,81 +118,63 @@ app.post("/user/register/", async (req, res) => {
   });
 });
 
-//OLD register new user
-app.post("/user/registerold/", (req, res) => {
-  const newUser = req.body.name;
-  const email = req.body.email;
-
-  if (newUser) {
-    usersRepository.addUser(newUser, email);
-    console.log(usersRepository.getAll());
-    res.send("New user " + newUser + " has been registered.");
-  } else {
-    res.status(400).send("400: Format of new user cannot be accepted.");
-  }
-});
-
 //update username
-app.put("/user/:userName", (req, res) => {
-  const userNameToUpdate = req.body.name;
-
-  const userNameChanged = usersRepository.changeUserName(
-    req.params.userName,
-    userNameToUpdate
-  );
-  if (userNameChanged) {
-    console.log(usersRepository.getAll());
-    res.send(
-      "User " + req.params.userName + " has been changed to " + userNameToUpdate
-    );
-  } else {
-    res.status(400).send("400: Format of new user name cannot be accepted.");
-  }
+app.patch("/user/newusername", (req, res) => {
+  const oldUsername = req.body.oldUserName
+  const newUsername = req.body.newUserName;
+  Users.findOneAndUpdate({username: oldUsername}, {
+    $set:{username: newUsername}
+  }, { new: true }).then((user) => {
+    res.status(200).json(user)
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error)
+  })
 });
 
 //deregister user
 app.delete("/user/delete", (req, res) => {
-  const userToDelete = req.body.name;
-  const userDeleted = usersRepository.deleteUser(userToDelete);
-  if (userDeleted) {
-    res.send("User's " + userToDelete + " email address has been deleted.");
-  } else {
-    res.status(400).send("400: Format of user cannot be accepted.");
-  }
+  const userToDelete = req.body.username
+  Users.findOneAndDelete({username:userToDelete}, { new: true }).then((user) => {
+    res.status(200).send("User " + user.username + " deleted.")
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send("Error: " + error);
+  })
 });
 
 //add favorite movie
-app.post("/user/:name/:favoritemovie", (req, res) => {
-  const user = req.params.name;
-  const movieToAdd = req.params.favoritemovie;
-  const favoriteMovieAdded = usersRepository.addFavoriteMovie(user, movieToAdd);
-  if (favoriteMovieAdded) {
-    res.send(
-      "Movie " + movieToAdd + " added to favorite movies list of user " + user
-    );
-  } else {
-    res.status(500).send("500: User or movie not registered.");
-  }
+app.post("/user/addfavoritemovie/", (req, res) => {
+  const reqUsername = req.body.username;
+  const titleMovie = req.body.favoriteMovie;
+  Movies.findOne({title:titleMovie}).then((movie)=>{
+    if(movie){
+      Users.findOneAndUpdate({username:reqUsername}, {$addToSet:{favoriteMovies: movie._id}}).then((user)=>{
+      res.status(200).send(user)})
+    }else{
+      res.status(400).send("400: Movie not registered.")
+    }
+  }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      })
 });
 
 //delete favorite movie
-app.delete("/user/:name/:favoritemovie", (req, res) => {
-  const user = req.params.name;
-  const movieToDelete = req.params.favoritemovie;
-  const favoriteMovieDeleted = usersRepository.removeFavoriteMovie(
-    user,
-    movieToDelete
-  );
-  if (favoriteMovieDeleted) {
-    res.send(
-      "Movie " +
-        movieToDelete +
-        " deleted from favorite movies list of user " +
-        user
-    );
-  } else {
-    res.status(500).send("500: User or movie not registered.");
-  }
+app.delete("/user/deletefavoritemovie/", (req, res) => {
+  const reqUsername = req.body.username;
+  const titleMovie = req.body.favoriteMovie;
+  Movies.findOne({title:titleMovie}).then((movie)=>{
+    if(movie){
+      Users.findOneAndUpdate({username:reqUsername}, {$pull:{favoriteMovies: movie._id}}).then((user)=>{
+      res.status(200).send(user)})
+    }else{
+      res.status(400).send("400: Movie not registered.")
+    }
+  }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      })
 });
 
 app.use(express.static("public"));
