@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const Models = require("./models.js");
 
 const app = express();
+const cors = require("cors");
+app.use(cors())
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
@@ -120,7 +122,8 @@ app.get(
 //register new user in db
 app.post("/users/register/", async (req, res) => {
   const newUser = req.body;
-  await Users.findOne({ username: newUser.username })
+  let hashedPassword = Users.hashPassword(newUser.Password)
+  await Users.findOne({ Username: newUser.Username })
     .then((user) => {
       if (user) {
         return res
@@ -131,7 +134,7 @@ app.post("/users/register/", async (req, res) => {
           name: newUser.name,
           Username: newUser.Username,
           email: newUser.email,
-          Password: newUser.Password,
+          Password: hashedPassword,
           Birthday: newUser.birthday,
         })
           .then((user) => {

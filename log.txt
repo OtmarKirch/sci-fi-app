@@ -336,3 +336,6 @@
 ::1 - - [14/May/2024:12:25:33 +0000] "POST /users/favoritemovie HTTP/1.1" 200 53 "-" "PostmanRuntime/7.38.0"
 ::1 - - [14/May/2024:12:26:13 +0000] "DELETE /users/favoritemovie HTTP/1.1" 200 57 "-" "PostmanRuntime/7.38.0"
 ::1 - - [14/May/2024:12:27:11 +0000] "DELETE /users/delete HTTP/1.1" 200 20 "-" "PostmanRuntime/7.38.0"
+::1 - - [15/May/2024:11:22:37 +0000] "POST /users/register HTTP/1.1" 201 199 "-" "PostmanRuntime/7.37.3"
+::1 - - [15/May/2024:11:28:59 +0000] "GET /login HTTP/1.1" 404 144 "-" "PostmanRuntime/7.37.3"
+::1 - - [15/May/2024:11:30:27 +0000] "GET /login?Username=MikeS&Password=3nd93l2wiv HTTP/1.1" 404 144 "-" "PostmanRuntime/7.37.3"
