@@ -178,9 +178,19 @@ app.post("/users/register/", [
 
 //update username
 app.put(
-  "/users/newusername",
+  "/users/newusername",[
+    check("oldUserName", "oldUserName is required").not().isEmpty(),
+    check("newUserName", "newUserName is required, including at least five characters").isLength({min:5}),
+    check("newUserName","newUserName may only include letters and numbers.").isAlphanumeric()
+  ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    let errors = validationResult(req);
+  
+    if (!errors.isEmpty()){
+      return res.status(422).json({errors: errors.array()})
+    }
+  
     const oldUsername = req.body.oldUserName;
     const newUsername = req.body.newUserName;
     if (req.user.Username !== oldUsername) {
@@ -226,9 +236,17 @@ app.delete(
 
 //add favorite movie
 app.post(
-  "/users/favoritemovie/",
+  "/users/favoritemovie/", [
+    check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()
+  ],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    let errors = validationResult(req);
+  
+    if (!errors.isEmpty()){
+      return res.status(422).json({errors: errors.array()})
+    }
+  
     const reqUsername = req.body.Username;
     const titleMovie = req.body.favoriteMovie;
     console.log(req.user.Username);
@@ -239,7 +257,7 @@ app.post(
       .then((movie) => {
         if (movie) {
           Users.findOneAndUpdate(
-            { username: reqUsername },
+            { Username: reqUsername },
             { $addToSet: { favoriteMovies: movie._id } }
           ).then((user) => {
             res
@@ -264,9 +282,17 @@ app.post(
 
 //delete favorite movie
 app.delete(
-  "/users/favoritemovie/",
+  "/users/favoritemovie/", [
+    check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()
+  ],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    let errors = validationResult(req);
+  
+    if (!errors.isEmpty()){
+      return res.status(422).json({errors: errors.array()})
+    }
+  
     const reqUsername = req.body.Username;
     const titleMovie = req.body.favoriteMovie;
     if (req.user.Username !== reqUsername) {
@@ -276,7 +302,7 @@ app.delete(
       .then((movie) => {
         if (movie) {
           Users.findOneAndUpdate(
-            { username: reqUsername },
+            { Username: reqUsername },
             { $pull: { favoriteMovies: movie._id } }
           ).then((user) => {
             res
