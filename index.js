@@ -7,6 +7,7 @@ const uuid = require("uuid");
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 const {check, validationResult} = require("express-validator")
+require("dotenv").config();
 
 const app = express();
 const cors = require("cors");
@@ -18,7 +19,16 @@ require("./passport");
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect("mongodb://localhost:27017/mySciFiApp", {
+// //connecting to the local db
+// mongoose.connect("mongodb://localhost:27017/mySciFiApp", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+//connecting to db hosted at atlas
+const atlasURI = "mongodb+srv://otmarkirchgaessner:" + process.env.ATLASPASSWORD + "@otmarscluster0.7eaz0ft.mongodb.net/mySciFiApp?retryWrites=true&w=majority&appName=OtmarsCluster0"
+
+mongoose.connect(atlasURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -143,7 +153,7 @@ app.post("/users/register/", [
       if (user) {
         return res
           .status(400)
-          .send("User " + newUser.username + " already exists.");
+          .send("User " + newUser.Username + " already exists.");
       } else {
         Users.create({
           name: newUser.name,
