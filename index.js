@@ -26,9 +26,8 @@ const Users = Models.User;
 // });
 
 //connecting to db hosted at atlas
-const atlasURI = "mongodb+srv://otmarkirchgaessner:" + process.env.ATLASPASSWORD + "@otmarscluster0.7eaz0ft.mongodb.net/mySciFiApp?retryWrites=true&w=majority&appName=OtmarsCluster0"
 
-mongoose.connect(atlasURI, {
+mongoose.connect(process.env.DB_CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
