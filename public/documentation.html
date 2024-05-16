@@ -43,9 +43,17 @@
     <div>
       <h3>Register new user</h3>
       <p>Allows new users to register.</p>
-      <p>Add a body in JSON format like this:</p>
+      <p>Add a body in JSON format with the following requirements:</p>
+      <ul>
+        <li>The "Username" field is mandatory, must contain at least five characters, and must only include letters and numbers (alphanumeric characters).</li>
+        <li>The "Name" field is mandatory and must contain at least five characters.</li>
+        <li>The "Email" field is mandatory and must be a valid email address.</li>
+        <li>The "Password" field is mandatory, must contain at least eight characters, and must only include letters and numbers (alphanumeric characters).</li>
+        <li>The "Birthday" field is optional but, if provided, must be in the format DDMMYYYY.</li>
+      </ul>
+      
         <pre><code class="language-json">
- {"name": "Mike Smith", "Username":"MikeS", "email": "mike@mike.com", "Password":"3nd93l2wiv", "Birthday":"19.09.1991"}
+ {"name": "Mike Smith", "Username":"MikeS", "email": "mike@mike.com", "Password":"3nd93l2wiv", "Birthday":"19091991"}
         </code></pre>
         <p>Birthday is optional. All other fields are required. Favorite movies can be added and deleted with the favorite movie endpoints below.</p>
       <span class="method">POST</span> <code>/users/register</code>

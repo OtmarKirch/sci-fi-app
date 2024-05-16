@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
 const Models = require("./models.js");
+const {check, validationResult} = require("express-validator")
 
 const app = express();
 const cors = require("cors");
@@ -120,7 +121,21 @@ app.get(
 );
 
 //register new user in db
-app.post("/users/register/", async (req, res) => {
+app.post("/users/register/", [
+  check("Username", "Username is required, including at least five characters").isLength({min:5}),
+  check("Username", "Username may only include letters and numbers.").isAlphanumeric(),
+  check("name", "name is required with at least 5 characters.").isLength({min:5}),
+  check("email", "valid email is requires").isEmail(),
+  check("Password", "Password is required with at least 8 characters.").isLength({min:8}),
+  check("Password", "Password may only include letters and numbers.").isAlphanumeric(),
+  check("Birthday", "Birthday can either be not defined or in the format of DDMMYYY").optional().matches(/^\d{2}\d{2}\d{4}$/)
+], async (req, res) => {
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()})
+  }
+
   const newUser = req.body;
   let hashedPassword = Users.hashPassword(newUser.Password)
   await Users.findOne({ Username: newUser.Username })
@@ -135,7 +150,7 @@ app.post("/users/register/", async (req, res) => {
           Username: newUser.Username,
           email: newUser.email,
           Password: hashedPassword,
-          Birthday: newUser.birthday,
+          Birthday: newUser.Birthday,
         })
           .then((user) => {
             res.status(201).json(user);
