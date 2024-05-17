@@ -30,10 +30,10 @@
     </p>
     <h2>Current State</h2>
     <p>
-      The server is set up with using node.js and express. The website can be
-      locally hosted. Several endpoints have been implemented for retrieving
+      The server is set up by using node.js and express. The website can be
+      locally hosted. It is also hosted at <a href="https://sci-fi-app.onrender.com/">https://sci-fi-app.onrender.com/</a>. Several endpoints have been implemented for retrieving
       movie data, registering users and adding favorite movies. Requests are
-      logged by middleware using morgan. The data base is implemented with MongoDB. New users can now register. Access and manipulation of all data is now restricted.
+      logged by middleware using morgan. The data base is implemented with MongoDB. New users can now register. Access and manipulation of all data is now restricted using JWT.
     </p>
     <h2>Access</h2>
       In order to access or manipulate data, users have to register via the <code>/users/register</code> endpoint. The user can then log in  with the <code>/login</code> endpoint, passing "Password" and "Username" as parameters.
@@ -51,11 +51,10 @@
         <li>The "Password" field is mandatory, must contain at least eight characters, and must only include letters and numbers (alphanumeric characters).</li>
         <li>The "Birthday" field is optional but, if provided, must be in the format DDMMYYYY.</li>
       </ul>
-      
+      <p>Request body example:</p>
         <pre><code class="language-json">
  {"name": "Mike Smith", "Username":"MikeS", "email": "mike@mike.com", "Password":"3nd93l2wiv", "Birthday":"19091991"}
         </code></pre>
-        <p>Birthday is optional. All other fields are required. Favorite movies can be added and deleted with the favorite movie endpoints below.</p>
       <span class="method">POST</span> <code>/users/register</code>
       <p>Response example:</p>
       <pre><code class="language-json">
@@ -65,6 +64,7 @@
           "email": "mike@mike.com",
           "Password": "HASHED PASSWORD",
           "favoriteMovies": [],
+          "Birthday": ISODate('1991-09-19T00:00:00.000Z'),
           "_id": "664306dcf2678d2d0a509b6c",
           "__v": 0
       }
@@ -163,7 +163,12 @@
     </div>
     <div>
       <h3>Update user name</h3>
-      <p>Allows users to update their username. Add a body in JSON format like this:</p>
+      <p>Allows users to update their username. Add a body in JSON with the following keys:</p>
+      <ul>
+        <li>"oldUserName" is mandatory and must match the current username exactly.</li>
+        <li>"newUserName" is mandatory and must include at least five characters, only letters and numbers.</li>
+      </ul>
+      <p>Request body example:</p>
         <pre><code class="language-json">
  {"oldUserName":"MikeS", "newUsername":"MSmith"}
         </code></pre>
@@ -174,19 +179,21 @@
       {
           "_id": "664306dcf2678d2d0a509b6c",
           "name": "Mike Smith",
-          "username": "MSmith",
+          "Username": "MSmith",
           "email": "mike@mike.com",
           "password": "HASHED PASSWORD",
+          "Birthday": ISODate('1991-09-19T00:00:00.000Z'),
           "favoriteMovies": [],
           "__v": 0
       }
     </code></pre>
     <div>
       <h3>Deregister user</h3>
-      <p>Allow existing users to deregister.</p>
-      <p>Add a body in JSON format like this:</p> 
+      <p>Allow existing users to deregister. Add a body in JSON with the following keys:</p>
+      <ul>"Username" is mandatory and must match the current username exactly.</ul>
+      <p>Request body example:</p> 
         <pre><code class="language-json">
- {"username": "MSmith"}
+ {"Username": "MSmith"}
         </code></pre>
       <span class="method">DELETE</span> <code>/users/delete</code>
       <p>Response example:</p>
@@ -194,9 +201,13 @@
     </div>
     <div>
       <h3>Add movie to favorites</h3>
-      <p>Allows users to add a movie to their list of favorites. Add a body in JSON format like this:</p>
+      <p>Allows users to add a movie to their list of favorites. Add a body in JSON with the following keys:</p>
+      <ul>
+        <li>"Username" is mandatory and must match the current username exactly.</li>
+        <li>"favoriteMovie" is mandatory and must match the title of a movie exactly.</li>
+      </ul>
         <pre><code class="language-json">
- {"username":"MikeS", "favoriteMovie":"Inception"}
+ {"Username":"MikeS", "favoriteMovie":"Inception"}
         </code></pre>
       <span class="method">POST</span>
       <code>/users/favoritemovie</code>
@@ -207,7 +218,7 @@
       <h3>Remove a movie from favorites</h3>
       <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format like this:</p>
         <pre><code class="language-json">
- {"username":"MSmith", "favoriteMovie":"Inception"}
+ {"Username":"MSmith", "favoriteMovie":"Inception"}
         </code></pre>
       <span class="method">DELETE</span>
       <code>/users/favoritemovie</code>
