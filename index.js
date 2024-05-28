@@ -199,6 +199,21 @@ app.post(
   }
 );
 
+//update password
+app.put("/users/newpassword",[check(
+  "Password",
+  "Password is required with at least 8 characters."
+).isLength({ min: 8 })],
+passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    console.log(hashedPassword)
+    await Users.findOneAndUpdate({Username:req.user.Username},{$set: {Password:hashedPassword}})
+    .then(res.send("Password updated."))
+    .catch((error)=>{res.send("not updated" + error)})
+  }
+)
+
 //update username
 app.put(
   "/users/newusername",
@@ -244,11 +259,11 @@ app.put(
   }
 );
 
-//update name, email and birthday
+//update username, name, email and birthday
 app.put(
   "/users/newdetails",
   [
-    //check("Username", "Username is required, including at least five characters").isLength({min:5}),
+    check("Username", "Username is required, including at least five characters").optional().isLength({min:5}),
     check("name", "name is required with at least 5 characters.")
       .optional()
       .isLength({ min: 5 }),
