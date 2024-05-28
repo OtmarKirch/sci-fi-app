@@ -189,25 +189,26 @@
     </div>
     <div>
       <h3>Update user details</h3>
-      <p>Allows users to update their name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored.</p>
+      <p>Allows users to update their username, name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored.</p>
       <ul>
         <li></li>
+        <li>"Username</li>
         <li>"name"</li>
         <li>"email"</li>
         <li>"Birthday"</li>
       </ul>
       <p>Request body example:</p>
         <pre><code class="language-json">
- {"name":"Sarah Smith", email:"", "Birthday": 25011991, "gender":"female"}
+ {"Username":"SMith","name":"Sarah Smith", "Birthday": 25011991, "gender":"female"}
         </code></pre>
       <span class="method">PUT</span> <code>/users/newdetails</code>
     <p>Response example:</p>
     <pre><code class="language-json">
       {
         "_id": "66474157674c6e1cc1d8f8b5",
-        "name": "Mike Smith",
-        "Username": "MikeSm",
-        "email": "newemail@email.com",
+        "name": "Sarah Smith",
+        "Username": "SMith",
+        "email": "email@email.com",
         "Password": "HASHED PASSWORD",
         "favoriteMovies": [
             "663a4446f5fc80b9c0e00d93"

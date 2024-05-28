@@ -292,9 +292,22 @@ app.put(
         );
       }
 
+      if (req.body.Username) {
+        await Users.findOneAndUpdate(
+          { Username: req.user.Username },
+          { $set: { Username: req.body.Username } }
+        );
+      }
+
+      if (!req.body.Username) {
       Users.findOne({ Username: req.user.Username }).then((user) => {
         res.json(user);
-      });
+      })}else{
+        Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+          res.json(user)
+        });
+      }
     }
   }
 );
