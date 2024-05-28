@@ -173,7 +173,6 @@
  {"oldUserName":"MikeS", "newUsername":"MSmith"}
         </code></pre>
       <span class="method">PUT</span> <code>/users/newusername</code>
-    </div>
     <p>Response example:</p>
     <pre><code class="language-json">
       {
@@ -187,6 +186,37 @@
           "__v": 0
       }
     </code></pre>
+    </div>
+    <div>
+      <h3>Update user details</h3>
+      <p>Allows users to update their name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored.</p>
+      <ul>
+        <li></li>
+        <li>"name"</li>
+        <li>"email"</li>
+        <li>"Birthday"</li>
+      </ul>
+      <p>Request body example:</p>
+        <pre><code class="language-json">
+ {"name":"Sarah Smith", email:"", "Birthday": 25011991, "gender":"female"}
+        </code></pre>
+      <span class="method">PUT</span> <code>/users/newdetails</code>
+    <p>Response example:</p>
+    <pre><code class="language-json">
+      {
+        "_id": "66474157674c6e1cc1d8f8b5",
+        "name": "Mike Smith",
+        "Username": "MikeSm",
+        "email": "newemail@email.com",
+        "Password": "HASHED PASSWORD",
+        "favoriteMovies": [
+            "663a4446f5fc80b9c0e00d93"
+        ],
+        "__v": 0,
+        "Birthday": "1970-01-01T06:56:51.991Z"
+    }
+    </code></pre>
+    </div>
     <div>
       <h3>Deregister user</h3>
       <p>Allow existing users to deregister. Add a body in JSON with the following keys:</p>

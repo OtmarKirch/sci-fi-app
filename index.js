@@ -6,12 +6,12 @@ const bodyParser = require("body-parser");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
 const Models = require("./models.js");
-const {check, validationResult} = require("express-validator")
+const { check, validationResult } = require("express-validator");
 require("dotenv").config();
 
 const app = express();
 const cors = require("cors");
-app.use(cors())
+app.use(cors());
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
@@ -130,67 +130,97 @@ app.get(
 );
 
 //register new user in db
-app.post("/users/register/", [
-  check("Username", "Username is required, including at least five characters").isLength({min:5}),
-  check("Username", "Username may only include letters and numbers.").isAlphanumeric(),
-  check("name", "name is required with at least 5 characters.").isLength({min:5}),
-  check("email", "valid email is requires").isEmail(),
-  check("Password", "Password is required with at least 8 characters.").isLength({min:8}),
-  check("Password", "Password may only include letters and numbers.").isAlphanumeric(),
-  check("Birthday", "Birthday can either be not defined or in the format of DDMMYYY").optional().matches(/^\d{2}\d{2}\d{4}$/)
-], async (req, res) => {
-  let errors = validationResult(req);
+app.post(
+  "/users/register/",
+  [
+    check(
+      "Username",
+      "Username is required, including at least five characters"
+    ).isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username may only include letters and numbers."
+    ).isAlphanumeric(),
+    check("name", "name is required with at least 5 characters.").isLength({
+      min: 5,
+    }),
+    check("email", "valid email is requires").isEmail(),
+    check(
+      "Password",
+      "Password is required with at least 8 characters."
+    ).isLength({ min: 8 }),
+    check(
+      "Password",
+      "Password may only include letters and numbers."
+    ).isAlphanumeric(),
+    check(
+      "Birthday",
+      "Birthday can either be not defined or in the format of DDMMYYY"
+    )
+      .optional()
+      .matches(/^\d{2}\d{2}\d{4}$/),
+  ],
+  async (req, res) => {
+    let errors = validationResult(req);
 
-  if (!errors.isEmpty()){
-    return res.status(422).json({errors: errors.array()})
-  }
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-  const newUser = req.body;
-  let hashedPassword = Users.hashPassword(newUser.Password)
-  await Users.findOne({ Username: newUser.Username })
-    .then((user) => {
-      if (user) {
-        return res
-          .status(400)
-          .send("User " + newUser.Username + " already exists.");
-      } else {
-        Users.create({
-          name: newUser.name,
-          Username: newUser.Username,
-          email: newUser.email,
-          Password: hashedPassword,
-          Birthday: newUser.Birthday,
-        })
-          .then((user) => {
-            res.status(201).json(user);
+    const newUser = req.body;
+    let hashedPassword = Users.hashPassword(newUser.Password);
+    await Users.findOne({ Username: newUser.Username })
+      .then((user) => {
+        if (user) {
+          return res
+            .status(400)
+            .send("User " + newUser.Username + " already exists.");
+        } else {
+          Users.create({
+            name: newUser.name,
+            Username: newUser.Username,
+            email: newUser.email,
+            Password: hashedPassword,
+            Birthday: newUser.Birthday,
           })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+            .then((user) => {
+              res.status(201).json(user);
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send("Error: " + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 //update username
 app.put(
-  "/users/newusername",[
+  "/users/newusername",
+  [
     check("oldUserName", "oldUserName is required").not().isEmpty(),
-    check("newUserName", "newUserName is required, including at least five characters").isLength({min:5}),
-    check("newUserName","newUserName may only include letters and numbers.").isAlphanumeric()
+    check(
+      "newUserName",
+      "newUserName is required, including at least five characters"
+    ).isLength({ min: 5 }),
+    check(
+      "newUserName",
+      "newUserName may only include letters and numbers."
+    ).isAlphanumeric(),
   ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     let errors = validationResult(req);
-  
-    if (!errors.isEmpty()){
-      return res.status(422).json({errors: errors.array()})
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  
+
     const oldUsername = req.body.oldUserName;
     const newUsername = req.body.newUserName;
     if (req.user.Username !== oldUsername) {
@@ -211,6 +241,61 @@ app.put(
         console.error(error);
         res.status(500).send("Error: " + error);
       });
+  }
+);
+
+//update name, email and birthday
+app.put(
+  "/users/newdetails",
+  [
+    //check("Username", "Username is required, including at least five characters").isLength({min:5}),
+    check("name", "name is required with at least 5 characters.")
+      .optional()
+      .isLength({ min: 5 }),
+    check("email", "valid email is requires").optional().isEmail(),
+    check(
+      "Birthday",
+      "Birthday can either be not defined or in the format of DDMMYYY"
+    )
+      .optional()
+      .matches(/^\d{2}\d{2}\d{4}$/),
+  ],
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    if (!req.body.name && !req.body.email && !req.body.Birthday) {
+      res.status(400).send("no valid data sent");
+    } else {
+      if (req.body.name) {
+        await Users.findOneAndUpdate(
+          { Username: req.user.Username },
+          { $set: { name: req.body.name } }
+        );
+      }
+
+      if (req.body.email) {
+        await Users.findOneAndUpdate(
+          { Username: req.user.Username },
+          { $set: { email: req.body.email } }
+        );
+      }
+
+      if (req.body.Birthday) {
+        await Users.findOneAndUpdate(
+          { Username: req.user.Username },
+          { $set: { Birthday: req.body.Birthday } }
+        );
+      }
+
+      Users.findOne({ Username: req.user.Username }).then((user) => {
+        res.json(user);
+      });
+    }
   }
 );
 
@@ -236,17 +321,16 @@ app.delete(
 
 //add favorite movie
 app.post(
-  "/users/favoritemovie/", [
-    check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()
-  ],
+  "/users/favoritemovie/",
+  [check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
-  
-    if (!errors.isEmpty()){
-      return res.status(422).json({errors: errors.array()})
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  
+
     const reqUsername = req.body.Username;
     const titleMovie = req.body.favoriteMovie;
     console.log(req.user.Username);
@@ -282,17 +366,16 @@ app.post(
 
 //delete favorite movie
 app.delete(
-  "/users/favoritemovie/", [
-    check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()
-  ],
+  "/users/favoritemovie/",
+  [check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
-  
-    if (!errors.isEmpty()){
-      return res.status(422).json({errors: errors.array()})
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  
+
     const reqUsername = req.body.Username;
     const titleMovie = req.body.favoriteMovie;
     if (req.user.Username !== reqUsername) {
