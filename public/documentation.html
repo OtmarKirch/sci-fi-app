@@ -219,8 +219,20 @@
     </code></pre>
     </div>
     <div>
+      <h3>Update Password</h3>
+      <p>Allow existing user to change the password. Add a body in JSON with the following key:</p>
+      <ul>"Password" is mandatory, must include at least 8 characters of letters and numbers.</ul>
+      <p>Request body example:</p> 
+        <pre><code class="language-json">
+ {"Password": "eicn7ieks83"}
+        </code></pre>
+      <span class="method">DELETE</span> <code>/users/delete</code>
+      <p>Response example:</p>
+      "Password updated."
+    </div>
+    <div>
       <h3>Deregister user</h3>
-      <p>Allow existing users to deregister. Add a body in JSON with the following keys:</p>
+      <p>Allow existing users to deregister. Add a body in JSON with the following key:</p>
       <ul>"Username" is mandatory and must match the current username exactly.</ul>
       <p>Request body example:</p> 
         <pre><code class="language-json">
