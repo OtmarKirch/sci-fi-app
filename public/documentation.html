@@ -191,8 +191,7 @@
       <h3>Update user details</h3>
       <p>Allows users to update their username, name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored.</p>
       <ul>
-        <li></li>
-        <li>"Username</li>
+        <li>"Username"</li>
         <li>"name"</li>
         <li>"email"</li>
         <li>"Birthday"</li>
@@ -226,7 +225,7 @@
         <pre><code class="language-json">
  {"Password": "eicn7ieks83"}
         </code></pre>
-      <span class="method">DELETE</span> <code>/users/delete</code>
+      <span class="method">PUT</span> <code>/users/delete</code>
       <p>Response example:</p>
       "Password updated."
     </div>

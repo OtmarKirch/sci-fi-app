@@ -14,6 +14,7 @@ const cors = require("cors");
 app.use(cors());
 let auth = require("./auth")(app);
 const passport = require("passport");
+const { title } = require("process");
 require("./passport");
 
 const Movies = Models.Movie;
@@ -350,7 +351,7 @@ app.delete(
 //add favorite movie
 app.post(
   "/users/favoritemovie/",
-  [check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()],
+  [check("favoriteMovie", "favoriteMovie may only include letters, numbers and spaces").matches(/^[a-zA-Z0-9 ]*$/)],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
@@ -367,6 +368,7 @@ app.post(
     }
     Movies.findOne({ title: titleMovie })
       .then((movie) => {
+        //console.log(movie._id === "663a4446f5fc80b9c0e00d93")
         if (movie) {
           Users.findOneAndUpdate(
             { Username: reqUsername },
@@ -395,7 +397,7 @@ app.post(
 //delete favorite movie
 app.delete(
   "/users/favoritemovie/",
-  [check("favoriteMovie", "favoriteMovie may only include letters").isAlpha()],
+  [check("favoriteMovie", "favoriteMovie may only include letters").matches(/^[a-zA-Z0-9 ]*$/)],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
