@@ -284,7 +284,7 @@ app.put(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    if (!req.body.name && !req.body.email && !req.body.Birthday) {
+    if (!req.body.Username && !req.body.name && !req.body.email && !req.body.Birthday) {
       res.status(400).send("no valid data sent");
     } else {
       if (req.body.name) {
