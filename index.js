@@ -351,7 +351,7 @@ app.delete(
 //add favorite movie
 app.post(
   "/users/favoritemovie/",
-  [check("favoriteMovie", "favoriteMovie may only include letters, numbers and spaces").matches(/^[a-zA-Z0-9 ]*$/)],
+  [check("favoriteMovie", "favoriteMovie must match movie title").isLength({ min: 1 })],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
@@ -360,29 +360,24 @@ app.post(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const reqUsername = req.body.Username;
+    console.log(req.body);
     const titleMovie = req.body.favoriteMovie;
-    console.log(req.user.Username);
-    if (req.user.Username !== reqUsername) {
-      return res.status(400).send("Permission denied");
-    }
+   
     Movies.findOne({ title: titleMovie })
       .then((movie) => {
-        //console.log(movie._id === "663a4446f5fc80b9c0e00d93")
         if (movie) {
           Users.findOneAndUpdate(
-            { Username: reqUsername },
+            { Username: req.user.Username },
             { $addToSet: { favoriteMovies: movie._id } }
-          ).then((user) => {
+          )
+          .then(() => 
+            Users.findOne({ Username: req.user.Username })
+          )
+          .then((user) => {
             res
               .status(200)
-              .send(
-                titleMovie +
-                  " was added to favorite movie list of " +
-                  reqUsername +
-                  "."
-              );
-          });
+              .json(user);
+          }).catch((error) => {res.status(500).send("Error: " + error);})
         } else {
           res.status(400).send("400: Movie not registered.");
         }
@@ -397,7 +392,7 @@ app.post(
 //delete favorite movie
 app.delete(
   "/users/favoritemovie/",
-  [check("favoriteMovie", "favoriteMovie may only include letters").matches(/^[a-zA-Z0-9 ]*$/)],
+  [check("favoriteMovie", "favoriteMovie may only include letters").isLength({ min: 1 })],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let errors = validationResult(req);
@@ -406,30 +401,28 @@ app.delete(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const reqUsername = req.body.Username;
     const titleMovie = req.body.favoriteMovie;
-    if (req.user.Username !== reqUsername) {
-      return res.status(400).send("Permission denied");
-    }
+    
     Movies.findOne({ title: titleMovie })
       .then((movie) => {
         if (movie) {
           Users.findOneAndUpdate(
-            { Username: reqUsername },
+            { Username: req.user.Username },
             { $pull: { favoriteMovies: movie._id } }
-          ).then((user) => {
+          )         
+          .then(() => 
+            Users.findOne({ Username: req.user.Username })
+          )
+          .then((user) => {
             res
               .status(200)
-              .send(
-                titleMovie +
-                  " was removed from favorite movie list of " +
-                  reqUsername +
-                  "."
-              );
-          });
+              .json(user);
+          }).catch((error) => {res.status(500).send("Error: " + error);})
         } else {
           res.status(400).send("400: Movie not registered.");
         }
+
+        
       })
       .catch((error) => {
         console.error(error);
