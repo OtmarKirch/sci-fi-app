@@ -617,3 +617,6 @@
 127.0.0.1 - - [31/May/2024:07:12:06 +0000] "POST /users/favoritemovie HTTP/1.1" 200 254 "-" "PostmanRuntime/7.39.0"
 127.0.0.1 - - [31/May/2024:07:18:21 +0000] "POST /users/favoritemovie HTTP/1.1" 200 254 "-" "PostmanRuntime/7.39.0"
 127.0.0.1 - - [31/May/2024:07:19:22 +0000] "POST /users/favoritemovie HTTP/1.1" 200 281 "-" "PostmanRuntime/7.39.0"
+127.0.0.1 - - [31/May/2024:07:48:44 +0000] "POST /users/favoritemovie HTTP/1.1" 200 281 "-" "PostmanRuntime/7.39.0"
+127.0.0.1 - - [31/May/2024:07:48:50 +0000] "DELETE /users/favoritemovie HTTP/1.1" 200 254 "-" "PostmanRuntime/7.39.0"
+127.0.0.1 - - [31/May/2024:08:03:12 +0000] "POST /users/favoritemovie HTTP/1.1" 200 281 "-" "PostmanRuntime/7.39.0"

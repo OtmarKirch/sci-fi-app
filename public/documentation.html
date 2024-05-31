@@ -243,29 +243,58 @@
     </div>
     <div>
       <h3>Add movie to favorites</h3>
-      <p>Allows users to add a movie to their list of favorites. Add a body in JSON with the following keys:</p>
+      <p>Allows users to add a movie to their list of favorites. Add a body in JSON with the following key:</p>
       <ul>
-        <li>"Username" is mandatory and must match the current username exactly.</li>
         <li>"favoriteMovie" is mandatory and must match the title of a movie exactly.</li>
       </ul>
         <pre><code class="language-json">
- {"Username":"MikeS", "favoriteMovie":"Inception"}
+ {"favoriteMovie":"Inception"}
         </code></pre>
       <span class="method">POST</span>
       <code>/users/favoritemovie</code>
       <p>Response example:</p>
-      "Inception was added to favorite movie list of MSmith."
+      <pre><code class="language-json">
+        {
+          "_id": "66596c2d09083966e8357ceb",
+          "name": "Mike Smith",
+          "Username": "MikeSmi",
+          "email": "mike@mike.com",
+          "Password": "HASHED PASSWORD",
+          "favoriteMovies": [
+              "663a4446f5fc80b9c0e00d8c",
+              "663a4446f5fc80b9c0e00d8f",
+              "663a4446f5fc80b9c0e00d93"
+          ],
+          "__v": 0
+      }
+               </code></pre>
     </div>
     <div>
       <h3>Remove a movie from favorites</h3>
-      <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format like this:</p>
+      <p>Allows users to remove a movie from their list of favorites. Add a body in JSON format with the following key:</p>
+      <ul>
+        <li>"favoriteMovie" is mandatory and must match the title of a movie exactly.</li>
+      </ul>
         <pre><code class="language-json">
- {"Username":"MSmith", "favoriteMovie":"Inception"}
+ {"favoriteMovie":"Inception"}
         </code></pre>
       <span class="method">DELETE</span>
       <code>/users/favoritemovie</code>
       <p>Response example:</p>
-      "Inception was removed from favorite movie list of MSmith."
+      <pre><code class="language-json">
+        {
+          "_id": "66596c2d09083966e8357ceb",
+          "name": "Mike Smith",
+          "Username": "MikeSmi",
+          "email": "mike@mike.com",
+          "Password": "HASHED PASSWORD",
+          "favoriteMovies": [
+              "663a4446f5fc80b9c0e00d8c",
+              "663a4446f5fc80b9c0e00d8f"
+          ],
+          "__v": 0
+      }
+               </code></pre>
     </div>
   </body>
 </html>

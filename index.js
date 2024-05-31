@@ -12,7 +12,7 @@ require("dotenv").config();
 const app = express();
 const cors = require("cors");
 app.use(cors());
-let auth = require("./auth")(app);
+
 const passport = require("passport");
 const { title } = require("process");
 require("./passport");
@@ -34,7 +34,7 @@ mongoose.connect(process.env.DB_CONNECTION_URI, {
 });
 
 app.use(bodyParser.json());
-
+let auth = require("./auth")(app);
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
 const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
