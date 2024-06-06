@@ -36,14 +36,14 @@
       logged by middleware using morgan. The data base is implemented with MongoDB. New users can now register. Access and manipulation of all data is now restricted using JWT.
     </p>
     <h2>Access</h2>
-      In order to access or manipulate data, users have to register via the <code>/users/register</code> endpoint. The user can then log in  with the <code>/login</code> endpoint, passing "Password" and "Username" as parameters.
+      In order to access or manipulate data, users have to register via the <code>/users/register</code> endpoint. The user can then log in  with the <code>/login</code> endpoint.
       After logging in, a bearer token (7 days validity) is sent back. The bearer token has to be used to access any endpoint other than the <code>/users/register</code> and <code>/login</code> endpoints. All users can access information about movies. User data can only be changed by the respective user. 
       
     <h2>APIs</h2>
     <div>
       <h3>Register new user</h3>
       <p>Allows new users to register.</p>
-      <p>Add a body in JSON format with the following requirements:</p>
+      <p>Add a body in JSON format with the following keys:</p>
       <ul>
         <li>The "Username" field is mandatory, must contain at least five characters, and must only include letters and numbers (alphanumeric characters).</li>
         <li>The "Name" field is mandatory and must contain at least five characters.</li>
@@ -53,7 +53,7 @@
       </ul>
       <p>Request body example:</p>
         <pre><code class="language-json">
- {"name": "Mike Smith", "Username":"MikeS", "email": "mike@mike.com", "Password":"3nd93l2wiv", "Birthday":"19091991"}
+      {"name": "Mike Smith", "Username":"MikeS", "email": "mike@mike.com", "Password":"3nd93l2wiv", "Birthday":"19091991"}
         </code></pre>
       <span class="method">POST</span> <code>/users/register</code>
       <p>Response example:</p>
@@ -72,8 +72,31 @@
     </div>
     <div>
       <h3>Login</h3>
-      <p>Users can log in and generate a bearer token necessary to access and manipulating data. "Password" and "Username" have to be passed along as parameters.</p>
+      <p>Users can log in and generate a bearer token necessary to access and manipulating data. "Password" and "Username" in the request body.</p>
+      <p>Request body example:</p>
+        <pre><code class="language-json">
+          {"Username":"MikeSmi", "Password":"asdfasdf"}
+        </code></pre>
       <span class="method">POST</span> <code>/login</code>
+      <p>Response example:</p>
+      <pre><code class="language-json">
+        {
+          "user": {
+              "_id": "66596c2d09083966e8357ceb",
+              "name": "Mike Smith",
+              "Username": "MikeSmi",
+              "email": "mike@mike.com",
+              "Password": "HASHED PASSWORD",
+              "favoriteMovies": [
+                  "663a4446f5fc80b9c0e00d8c",
+                  "663a4446f5fc80b9c0e00d8f",
+                  "663a4446f5fc80b9c0e00d93"
+              ],
+              "__v": 0
+          },
+          "token": "TOKEN"
+      }
+      </code></pre>
     </div>
     <div>
       <h3>Return all movies</h3>
@@ -189,12 +212,12 @@
     </div>
     <div>
       <h3>Update user details</h3>
-      <p>Allows users to update their username, name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored.</p>
+      <p>Allows users to update their username, name, email and birthday. It is possible to change one or several details at once. Add a body in JSON with the appropriate keys. Keys not matching the following list will be ignored. Be careful with the Username since the right Username is needed to log in.</p>
       <ul>
-        <li>"Username"</li>
-        <li>"name"</li>
-        <li>"email"</li>
-        <li>"Birthday"</li>
+        <li>"Username" of at least five characters.</li>
+        <li>"name" of at least five characters.</li>
+        <li>"email" a valid email address</li>
+        <li>"Birthday" in the format of DDMMYYYY</li>
       </ul>
       <p>Request body example:</p>
         <pre><code class="language-json">
