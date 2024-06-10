@@ -165,9 +165,10 @@ app.post(
     await Users.findOne({ Username: newUser.Username })
       .then((user) => {
         if (user) {
-          return res
-            .status(400)
-            .send("User " + newUser.Username + " already exists.");
+           res
+              .status(400)
+              .send("User " + newUser.Username + " already exists.");
+          console.log("User already exists.");
         } else {
           Users.create({
             name: newUser.name,
