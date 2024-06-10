@@ -144,8 +144,8 @@ app.post(
     check("email", "valid email is requires").isEmail(),
     check(
       "Password",
-      "Password may only include letters and numbers."
-    ).isAlphanumeric().isLength({ min: 8 }),
+      "Password must include at least 8 characters."
+    ).isLength({ min: 8 }),
     check(
       "Birthday",
       "Birthday can either be not defined or in the format of DDMMYYY"
