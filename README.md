@@ -2,18 +2,22 @@
 
 <!-- toc -->
 
-  * [Description](#description)
-  * [Technologies](#technologies)
-  * [Setup](#setup)
-  * [Key Features](#key-features)
-  * [Impressions](#impressions)
-  * [Conclusion](#conclusion)
-    + [Challenges](#challenges)
-    + [Future Improvements](#future-improvements)
+- [Description](#description)
+- [Technologies](#technologies)
+- [Setup](#setup)
+  * [Hosted at Heroku](#hosted-at-heroku)
+  * [Local Setup](#local-setup)
+    + [Database at MongoDB Atlas](#database-at-mongodb-atlas)
+    + [Codebase](#codebase)
+- [Key Features](#key-features)
+- [Impressions](#impressions)
+  * [Testing with Postman](#testing-with-postman)
+  * [Database at Atlas](#database-at-atlas)
+  * [Hosting on Heroku](#hosting-on-heroku)
+- [Conclusion](#conclusion)
+  * [Challenges](#challenges)
+  * [Future Improvements](#future-improvements)
   * [Final Thoughts](#final-thoughts)
-- [Overview](#overview)
-  * [The server](#the-server)
-  * [The client](#the-client)
 
 <!-- tocstop -->
 
@@ -46,21 +50,31 @@ In order to run the server, a database has to be established at MongoDB Atlas. T
 The database has to be populated with movie data. This has to be formatted as JSON and can be imported via the MongoDB Atlas dashboard. Movies have to follow the schema as defined in [`models.js`](https://github.com/OtmarKirch/sci-fi-app/blob/main/models.js#L4) in the codebase.
 
 #### Codebase
-The server can be run locally by cloning the repository. 
-In order to connect to the database, the connection string obtained from Atlas has to be stored in a `.env` file in the root directory of the project. The `.env` file should look like this:
+The server can be run locally by cloning the repository onto your local machine. Make sure to have Node.js and npm installed. Run `npm install` in the root directory of the project to install all dependencies. 
+In order to connect to the database, the connection string obtained from Atlas has to be stored in an `.env` file in the root directory of the project. The `.env` file should look like this:
 
 ````
 DB_CONNECTION_URI="YOUR_CONNECTION"
 ````
 Replace `YOUR_CONNECTION` with the connection string obtained from MongoDB Atlas.
 
-In order to run the server execute the following commands in the root directory of the project:
+In order to run the server execute the following command in the root directory of the project:
 
 ````
 node index.js
 ````
 
 ## Key Features
+The server provides the following endpoints:
+- Return a list of ALL movies to the user
+- Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user
+- Return data about a genre (description) by name/title (e.g., “Thriller”)
+- Return data about a director (bio, birth year, death year) by name
+- Allow new users to register
+- Allow users to update their user info (username, password, email, date of birth)
+- Allow users to add a movie to their list of favorites
+- Allow users to remove a movie from their list of favorites
+- Allow existing users to deregister
 
 ## Impressions
 ### Testing with Postman
@@ -81,11 +95,13 @@ The server is hosted on Heroku.
 ## Conclusion
 
 ### Challenges
+Especially challenging, I found the implementation of the user authentication and the handling of the JWT tokens. It is rather complicated to keep track of the tokens and to ensure that they are valid. The syntax is rather complex. It took me a while to get the authentication working properly. But in the end, when it worked, I was able to concentrate completely on the implementation of the endpoints, the heart piece of the server.
 
 ### Future Improvements
+In a future version, I would like to implement a more stringent naming of the endpoint. As I was learning how to implement the endpoints, I was also learning different ways how data is passed to the server side via the url and the body of the request. A more systematic naming of the endpoints and more systematic request requirements would make the server more robust, easier to maintain and easier to use for developers of the client. 
 
 ### Final Thoughts
-
+Providing a server for the client is at the heart of full-stack development. It is the backbone of the application. It was a great experience to implement the server andto see how the client can interact with it implemented in later projects (see [React client](https://github.com/OtmarKirch/MySciFi-client) and [Angular client](https://github.com/OtmarKirch/myFlix-Angular-client)). I learned a lot about the MERN stack and how to implement a server with Node.js and Express.
 
 
 
