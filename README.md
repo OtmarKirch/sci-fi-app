@@ -23,9 +23,11 @@
 
 ## Description
 
-A full-stack web application using the MERN (MongoDB, Express, React, and Node.js) stack is developed, demonstrating comprehensive skills in full-stack JavaScript development.
+This project is part of a full-stack web application using the MERN (MongoDB, Express, React, and Node.js) stack demonstrating comprehensive skills in full-stack JavaScript development.
 
-The client side code of this project is implemented in two other repositories: as a [React app](https://github.com/OtmarKirch/MySciFi-client) and as an [Angular app](https://github.com/OtmarKirch/mySciFi-Angular-client). You can find the React app running on [netlifly](https://myscifiapp.netlify.app/) and the Angular app on [GitHub Pages](https://otmarkirch.github.io/mySciFi-Angular-client/).
+The server side code for this project is implemented in this repository. The server provides a RESTful API that allows users to access movie data and user data. The server provides endpoints for users to access movie data and user data. For data protection, the password is hashed and the server uses JWT tokens for user authentication. The server is hosted on Heroku and the database is hosted on MongoDB Atlas.
+
+The client side code for this project is implemented in two other repositories: as a [React app](https://github.com/OtmarKirch/MySciFi-client) and as an [Angular app](https://github.com/OtmarKirch/mySciFi-Angular-client). You can find the React app running on [netlifly](https://myscifiapp.netlify.app/) and the Angular app on [GitHub Pages](https://otmarkirch.github.io/mySciFi-Angular-client/).
 
 ## Technologies
 - Node.js
@@ -76,6 +78,9 @@ The server provides the following endpoints:
 - Allow users to remove a movie from their list of favorites
 - Allow existing users to deregister
 
+For data protection, the password is hashed and
+the server uses JWT tokens for user authentication. The server is hosted on Heroku and the database is hosted on MongoDB Atlas.
+
 ## Impressions
 ### Testing with Postman
 Requests were tested thouroughly with Postman.
@@ -95,7 +100,7 @@ The server is hosted on Heroku.
 ## Conclusion
 
 ### Challenges
-Especially challenging, I found the implementation of the user authentication and the handling of the JWT tokens. It is rather complicated to keep track of the tokens and to ensure that they are valid. The syntax is rather complex. It took me a while to get the authentication working properly. But in the end, when it worked, I was able to concentrate completely on the implementation of the endpoints, the heart piece of the server.
+Especially challenging, I found the implementation of the user authentication with the hasehd password and the handling of the JWT tokens. It is complicated to keep track of the tokens and to ensure that they are valid. The syntax is rather complex. It took me a while to get the authentication working properly. But in the end, when it worked, I was able to concentrate completely on the implementation of the endpoints, the heart piece of the server.
 
 ### Future Improvements
 In a future version, I would like to implement a more stringent naming of the endpoint. As I was learning how to implement the endpoints, I was also learning different ways how data is passed to the server side via the url and the body of the request. A more systematic naming of the endpoints and more systematic request requirements would make the server more robust, easier to maintain and easier to use for developers of the client. 
