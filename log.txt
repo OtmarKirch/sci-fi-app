@@ -673,3 +673,5 @@
 127.0.0.1 - - [10/Jun/2024:07:06:04 +0000] "POST /users/register HTTP/1.1" 400 28 "-" "PostmanRuntime/7.39.0"
 127.0.0.1 - - [13/Aug/2024:18:55:00 +0000] "GET / HTTP/1.1" 200 26 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
 127.0.0.1 - - [13/Aug/2024:18:55:00 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+127.0.0.1 - - [28/Nov/2024:09:58:07 +0000] "GET / HTTP/1.1" 200 26 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+127.0.0.1 - - [28/Nov/2024:09:58:07 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
