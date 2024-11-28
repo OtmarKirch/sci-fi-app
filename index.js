@@ -30,6 +30,11 @@ const Users = Models.User;
 mongoose.connect(process.env.DB_CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  // user: "AdminCherry",
+  // pass: "passAdminCherry",
+  // authSource: "admin",
+  // tls: false,
+  // family: 4
 });
 
 app.use(bodyParser.json());
