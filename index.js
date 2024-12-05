@@ -47,6 +47,7 @@ app.get('/s3check', async (req, res) => {
   }
 });
 
+//list all files
 app.get('/files/list', (req, res) => {
   const listObjectsParams = {
       Bucket: process.env.S3_BUCKET_NAME
@@ -61,6 +62,7 @@ app.get('/files/list', (req, res) => {
       });
 });
 
+//upload a file
 app.post('/files/upload', async (req, res) => {
   console.log(req.files)
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -82,6 +84,7 @@ app.post('/files/upload', async (req, res) => {
   }
 });
 
+//get a single file
 app.get('/files/download', async (req, res) => {
   const { key } = req.query; // Get the object key from the query parameters
 
@@ -100,6 +103,23 @@ app.get('/files/download', async (req, res) => {
       data.Body.pipe(res); // Stream the object back to the client
   } catch (error) {
       res.status(500).send({ error: error.message });
+  }
+});
+
+//get all files of original size
+app.get('/files/originals', async (req, res) => {
+  const listObjectsParams = {
+    Bucket: process.env.S3_BUCKET_NAME,
+    Prefix: 'original-images/'
+  };
+
+  try {
+    const data = await s3Client.send(new ListObjectsV2Command(listObjectsParams));
+    const files = data.Contents.map(item => item.Key);
+    res.status(200).json(files);
+  } catch (error) {
+    console.error('Error fetching files from S3 bucket:', error.message);
+    res.status(500).send({ error: error.message });
   }
 });
 
