@@ -72,9 +72,8 @@ app.post('/files/upload', async (req, res) => {
   const file = req.files.file;
   const uploadParams = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: file.name,
-      Body: file.data,
-      Prefix: 'original-images/'
+      Key: 'original-images/' + file.name,
+      Body: file.data
   };
 
   try {
