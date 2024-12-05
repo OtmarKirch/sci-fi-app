@@ -25,7 +25,7 @@ const fileupload = require("express-fileupload");
 const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3Client = new S3Client({
-  region: eu-central-1,
+  region: "eu-central-1",
   endpoint: "http://s3.amazonaws.com/",
   forcePathStyle: true
 });
