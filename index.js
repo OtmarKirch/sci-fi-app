@@ -20,6 +20,33 @@ require("./passport");
 const Movies = Models.Movie;
 const Users = Models.User;
 
+//s3 access requirements
+const fileupload = require("express-fileupload");
+const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+
+const s3Client = new S3Client({
+  region: eu-central-1,
+  endpoint: "http://s3.amazonaws.com/",
+  forcePathStyle: true
+});
+
+app.use(fileupload());
+
+app.get('/s3check', async (req, res) => {
+  try {
+      // Check connection to S3 bucket by listing objects
+      const listObjectsParams = {
+          Bucket: process.env.S3_BUCKET_NAME,
+          MaxKeys: 1 // Limit the number of objects returned to 1 for a quick check
+      };
+      await s3Client.send(new ListObjectsV2Command(listObjectsParams));
+      res.send('You have reached the backend server and are connected to the S3 bucket.');
+  } catch (error) {
+      console.error('Error connecting to S3 bucket:', error.message);
+      res.status(500).send('You reached the server, but no connecting to S3 bucket.');
+  }
+});
+
 /**
  * @file provides api endpoints for a movie database
  * @author Otmar Kirchgäßner
@@ -30,8 +57,8 @@ const Users = Models.User;
 mongoose.connect("mongodb://10.1.1.100:27017/mySciFiApp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  user: DB_USER,
-  pass: DB_USER_PASS,
+  user: process.env.DB_USER,
+  pass: process.env.DB_USER_PASS,
   authSource: "admin",
   tls: false,
   family: 4
