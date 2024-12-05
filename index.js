@@ -13,11 +13,6 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 
-//access for S3
-const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
-const fileupload = require("express-fileupload");
-app.use(fileupload())
-
 const passport = require("passport");
 const { title } = require("process");
 require("./passport");
@@ -27,19 +22,19 @@ const Users = Models.User;
 
 /**
  * @file provides api endpoints for a movie database
- * @author Otmar Kirchgäßner 
+ * @author Otmar Kirchgäßner
  */
 
 //connecting to db hosted at atlas
 
-mongoose.connect(process.env.DB_CONNECTION_URI, {
+mongoose.connect("mongodb://10.1.1.100:27017/mySciFiApp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  // user: process.env.DB_USER,
-  // pass: process.env.DB_USER_PASS,
-  // authSource: "admin",
-  // tls: false,
-  // family: 4
+  user: "AdminCherry",
+  pass: "passAdminCherry",
+  authSource: "admin",
+  tls: false,
+  family: 4
 });
 
 app.use(bodyParser.json());
@@ -433,7 +428,7 @@ app.post(
 
     console.log(req.body);
     const titleMovie = req.body.favoriteMovie;
-   
+
     Movies.findOne({ title: titleMovie })
       .then((movie) => {
         if (movie) {
@@ -441,7 +436,7 @@ app.post(
             { Username: req.user.Username },
             { $addToSet: { favoriteMovies: movie._id } }
           )
-          .then(() => 
+          .then(() =>
             Users.findOne({ Username: req.user.Username })
           )
           .then((user) => {
@@ -480,15 +475,15 @@ app.delete(
     }
 
     const titleMovie = req.body.favoriteMovie;
-    
+
     Movies.findOne({ title: titleMovie })
       .then((movie) => {
         if (movie) {
           Users.findOneAndUpdate(
             { Username: req.user.Username },
             { $pull: { favoriteMovies: movie._id } }
-          )         
-          .then(() => 
+          )
+          .then(() =>
             Users.findOne({ Username: req.user.Username })
           )
           .then((user) => {
@@ -500,7 +495,7 @@ app.delete(
           res.status(400).send("400: Movie not registered.");
         }
 
-        
+
       })
       .catch((error) => {
         console.error(error);
@@ -508,94 +503,6 @@ app.delete(
       });
   }
 );
-
-//------------------------------------S3----------------------------------------
-
-
-const s3Client = new S3Client({
-    region: process.env.AWS_REGION,
-    endpoint: process.env.S3_ENDPOINT,
-    // forcePathStyle: true
-});
-
-app.use(fileupload());
-
-app.get('/', async (req, res) => {
-    try {
-        // Check connection to S3 bucket by listing objects
-        const listObjectsParams = {
-            Bucket: process.env.S3_BUCKET_NAME,
-            MaxKeys: 1 // Limit the number of objects returned to 1 for a quick check
-        };
-        await s3Client.send(new ListObjectsV2Command(listObjectsParams));
-        res.send('You have reached the backend server and are connected to the S3 bucket.');
-    } catch (error) {
-        console.error('Error connecting to S3 bucket:', error.message);
-        res.status(500).send('You reached the server, but no connecting to S3 bucket.');
-    }
-});
-
-app.get('/files/list', (req, res) => {
-    const listObjectsParams = {
-        Bucket: process.env.S3_BUCKET_NAME
-    };
-    s3Client.send(new ListObjectsV2Command(listObjectsParams))
-        .then((listObjectsResponse) => {
-            res.send(listObjectsResponse);
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({ error: error.message });
-        });
-});
-
-app.post('/files/upload', async (req, res) => {
-    console.log(req.files)
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    const file = req.files.file;
-    const uploadParams = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: "original-images/" + file.name,
-        Body: file.data
-    };
-
-    try {
-        await s3Client.send(new PutObjectCommand(uploadParams));
-        res.send('File uploaded successfully.');
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-});
-
-app.get('/files/download', async (req, res) => {
-    const { key } = req.query; // Get the object key from the query parameters
-
-    if (!key) {
-        return res.status(400).send('Missing key parameter');
-    }
-
-    const getObjectParams = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: key
-    };
-
-    try {
-        const data = await s3Client.send(new GetObjectCommand(getObjectParams));
-        res.setHeader('Content-Disposition', `attachment; filename=${key}`);
-        data.Body.pipe(res); // Stream the object back to the client
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-});
-
-app.get('/api/hello', (req, res) => {
-    res.send('Hello World');
-});
-
-//------------------------------------S3----------------------------------------
 
 app.use(express.static("public"));
 
