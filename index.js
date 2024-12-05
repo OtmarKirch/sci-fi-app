@@ -47,6 +47,20 @@ app.get('/s3check', async (req, res) => {
   }
 });
 
+app.get('/files/list', (req, res) => {
+  const listObjectsParams = {
+      Bucket: process.env.S3_BUCKET_NAME
+  };
+  s3Client.send(new ListObjectsV2Command(listObjectsParams))
+      .then((listObjectsResponse) => {
+          res.send(listObjectsResponse);
+      })
+      .catch((error) => {
+          console.log(error);
+          res.status(500).send({ error: error.message });
+      });
+});
+
 /**
  * @file provides api endpoints for a movie database
  * @author Otmar Kirchgäßner
