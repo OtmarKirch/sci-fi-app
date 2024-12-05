@@ -82,6 +82,27 @@ app.post('/files/upload', async (req, res) => {
   }
 });
 
+app.get('/files/download', async (req, res) => {
+  const { key } = req.query; // Get the object key from the query parameters
+
+  if (!key) {
+      return res.status(400).send('Missing key parameter');
+  }
+
+  const getObjectParams = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key
+  };
+
+  try {
+      const data = await s3Client.send(new GetObjectCommand(getObjectParams));
+      res.setHeader('Content-Disposition', `attachment; filename=${key}`);
+      data.Body.pipe(res); // Stream the object back to the client
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+});
+
 /**
  * @file provides api endpoints for a movie database
  * @author Otmar Kirchgäßner
