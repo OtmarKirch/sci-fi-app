@@ -61,6 +61,27 @@ app.get('/files/list', (req, res) => {
       });
 });
 
+app.post('/files/upload', async (req, res) => {
+  console.log(req.files)
+  if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+  }
+
+  const file = req.files.file;
+  const uploadParams = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: file.name,
+      Body: file.data
+  };
+
+  try {
+      await s3Client.send(new PutObjectCommand(uploadParams));
+      res.send('File uploaded successfully.');
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+});
+
 /**
  * @file provides api endpoints for a movie database
  * @author Otmar Kirchgäßner
