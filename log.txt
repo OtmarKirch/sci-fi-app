@@ -676,3 +676,6 @@
 127.0.0.1 - - [28/Nov/2024:09:58:07 +0000] "GET / HTTP/1.1" 200 26 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 127.0.0.1 - - [28/Nov/2024:09:58:07 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 127.0.0.1 - - [28/Nov/2024:10:33:02 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+127.0.0.1 - - [05/Dec/2024:17:40:35 +0000] "GET /api/hello HTTP/1.1" 200 11 "-" "PostmanRuntime/7.42.0"
+127.0.0.1 - - [05/Dec/2024:17:41:50 +0000] "GET / HTTP/1.1" 200 26 "http://127.0.0.1:5500/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
+127.0.0.1 - - [05/Dec/2024:17:42:12 +0000] "GET /files/list HTTP/1.1" 500 12 "http://127.0.0.1:5500/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
