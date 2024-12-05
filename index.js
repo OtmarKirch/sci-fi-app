@@ -30,8 +30,8 @@ const Users = Models.User;
 mongoose.connect("mongodb://10.1.1.100:27017/mySciFiApp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  user: "AdminCherry",
-  pass: "passAdminCherry",
+  user: DB_USER,
+  pass: DB_USER_PASS,
   authSource: "admin",
   tls: false,
   family: 4
