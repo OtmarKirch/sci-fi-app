@@ -27,7 +27,7 @@ const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } = r
 const s3Client = new S3Client({
   region: "eu-central-1",
   endpoint: "http://s3.amazonaws.com/",
-  forcePathStyle: true
+  forcePathStyle: false
 });
 
 app.use(fileupload());
