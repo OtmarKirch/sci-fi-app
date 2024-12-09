@@ -32,6 +32,9 @@ const s3Client = new S3Client({
 
 app.use(fileupload());
 
+// s3 endpoints
+
+//check connection to s3
 app.get('/s3check', async (req, res) => {
   try {
       // Check connection to S3 bucket by listing objects
@@ -43,7 +46,7 @@ app.get('/s3check', async (req, res) => {
       res.send('You have reached the backend server and are connected to the S3 bucket.');
   } catch (error) {
       console.error('Error connecting to S3 bucket:', error.message);
-      res.status(500).send('You reached the server, but no connecting to S3 bucket.');
+      res.status(500).send('You reached the server, but no connection to S3 bucket.');
   }
 });
 
@@ -115,7 +118,7 @@ app.get('/files/originals', async (req, res) => {
 
   try {
     const data = await s3Client.send(new ListObjectsV2Command(listObjectsParams));
-    const files = data.Contents.map(item => item.Key);
+    const files = data.Contents.map(item => item.Key).filter(item => item !== 'original-images/');
     res.status(200).json(files);
   } catch (error) {
     console.error('Error fetching files from S3 bucket:', error.message);
@@ -132,7 +135,7 @@ app.get('/files/resized', async (req, res) => {
 
   try {
     const data = await s3Client.send(new ListObjectsV2Command(listObjectsParams));
-    const files = data.Contents.map(item => item.Key);
+    const files = data.Contents.map(item => item.Key).filter(item => item !== 'resized-images/');
     res.status(200).json(files);
   } catch (error) {
     console.error('Error fetching files from S3 bucket:', error.message);
