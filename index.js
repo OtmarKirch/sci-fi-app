@@ -22,7 +22,7 @@ const Users = Models.User;
 
 //s3 access requirements
 const fileupload = require("express-fileupload");
-const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3Client = new S3Client({
   region: "eu-central-1",
@@ -104,6 +104,27 @@ app.get('/files/download', async (req, res) => {
       const data = await s3Client.send(new GetObjectCommand(getObjectParams));
       res.setHeader('Content-Disposition', `attachment; filename=${key}`);
       data.Body.pipe(res); // Stream the object back to the client
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+});
+
+//delete file
+app.delete('/files/delete', async (req, res) => {
+  const { key } = req.query; // Get the object key from the query parameters
+
+  if (!key) {
+      return res.status(400).send('Missing key parameter');
+  }
+
+  const deleteParams = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key
+  };
+
+  try {
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+      res.send('File deleted successfully.');
   } catch (error) {
       res.status(500).send({ error: error.message });
   }
